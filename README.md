@@ -8,8 +8,8 @@ If you prefer the Matlab flavor, or need more complete physics, please refer to 
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
 
 ### Package structure
-- `fluid`: Multifluid dispersion relation solver supporting anisotropic pressure.
-- `vlasov`: Vlasov dispersion relation solver for a warm, unmagnetized plasma.
+- `fluid`: Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
+- `vlasov`: Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
 - `common`: Coefficient generator, convenience tools for visulization, etc.
 
 ### Installation
