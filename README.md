@@ -11,6 +11,7 @@ If you prefer the Matlab flavor, or need more complete physics, please refer to 
 - `fluid`: Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
 - `vlasov`: Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
 - `common`: Coefficient generator, convenience tools for visulization, etc.
+For more information, see [https://liangwang0734.github.io/xeon/](https://liangwang0734.github.io/xeon/)
 
 ### Installation
 Currently, the package is provided only as is. One option to use the package is to make Python aware of its path:
