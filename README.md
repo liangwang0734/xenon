@@ -2,7 +2,7 @@
 
 XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python. The algorithms are extended from [[1]] and [[2]] with a few changes. Currently, the electromagnetic (EM) kinetic DR solver has not been implemented.
 
-If you prefer the Matlab flavor, please consider the original Matlab implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
+If you prefer the Matlab flavor, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
@@ -15,7 +15,7 @@ If you prefer the Matlab flavor, please consider the original Matlab implementat
 For more information, see [https://liangwang0734.github.io/xeon/](https://liangwang0734.github.io/xeon/)
 
 ### Installation
-Currently, the package is provided only as is. One option to use the package is to make Python aware of its path:
+Currently, the package is in development stage and is provided only as is. One option to use the package is to make Python aware of its path:
 ```python
 import sys
 sys.path.append("/path/to/xeon/")
