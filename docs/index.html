@@ -21,21 +21,26 @@
 </header>
 <section id="section-intro">
 <h2 id="xeon-a-matrix-based-dispersion-relation-solver-for-plasma-physics">XEON: A matriX-based dispErsion relAtion solver for plasma physics</h2>
-<p>XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python. The algorithms are extended from [[1]] and [[2]] with a few changes. Currently, the electromagnetic (EM) kinetic DR solver has not been implemented.</p>
+<p>XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python. The algorithms are extended from [[1]] and [[2]]. The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies <code>[w1, w2, w3, ...]</code> are computed as eigenvalues of this matrix for each wavenumber <code>k</code>. Currently, the electromagnetic (EM) kinetic DR solver has not been implemented.</p>
 <p>If you prefer the Matlab flavor, please consider the original implementation, <a href="https://github.com/hsxie/pdrk">BO</a>, by Dr. Huasheng Xie.</p>
-<h3 id="package-structure">Package structure</h3>
+<h3 id="dependencies">Dependencies</h3>
 <ul>
-<li><a title="xeon.fluid" href="fluid/index.html"><code>xeon.fluid</code></a>: Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.</li>
-<li><a title="xeon.vlasov" href="vlasov/index.html"><code>xeon.vlasov</code></a>: Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.</li>
-<li><a title="xeon.common" href="common/index.html"><code>xeon.common</code></a>: Coefficient generator, convenience tools for visulization, etc.</li>
+<li>Modern <a href="https://numpy.org/">numpy</a> and <a href="https://www.scipy.org">scipy</a> are required for computation.</li>
+<li><a href="https://matplotlib.org/">matplotlib</a> is required for using the visualization tool.</li>
 </ul>
-<p>For more information, see <a href="https://liangwang0734.github.io/xeon/&gt;">&lt;https://liangwang0734.github.io/xeon/</a></p>
 <h3 id="installation">Installation</h3>
 <p>Currently, the package is in development stage and is provided only as is. One option to use the package is to make Python aware of its path:</p>
 <pre><code class="python">import sys
 sys.path.append(&quot;/path/to/xeon/&quot;)
 import xeon
 </code></pre>
+<h3 id="package-structure-and-usage">Package structure and usage</h3>
+<ul>
+<li><code>fluid</code>: Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.</li>
+<li><code>vlasov</code>: Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.</li>
+<li><code>common</code>: Coefficient generator, convenience tools for visulization, etc.</li>
+</ul>
+<p>For the API, see <a href="https://liangwang0734.github.io/xeon/">https://liangwang0734.github.io/xeon/</a></p>
 <h3 id="references">References</h3>
 <p>[[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.<br>
 [[2]] Xie, Huasheng, and Xiao, Yong. "PDRK: A general kinetic dispersion relation solver for magnetized plasma." Plasma Science and Technology 18.2 (2016): 97.</p>
@@ -83,8 +88,9 @@ __name__ = &#34;xeon&#34;</code></pre>
 <div class="toc">
 <ul>
 <li><a href="#xeon-a-matrix-based-dispersion-relation-solver-for-plasma-physics">XEON: A matriX-based dispErsion relAtion solver for plasma physics</a><ul>
-<li><a href="#package-structure">Package structure</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
 <li><a href="#installation">Installation</a></li>
+<li><a href="#package-structure-and-usage">Package structure and usage</a></li>
 <li><a href="#references">References</a></li>
 </ul>
 </li>
