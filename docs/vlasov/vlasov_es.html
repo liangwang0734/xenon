@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.1" />
+<title>xeon.vlasov.vlasov_es API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>xeon.vlasov.vlasov_es</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">__all__ = [&#39;k2w_es1d&#39;, &#39;k2w_es3d&#39;]
+
+import numpy as np
+import scipy.linalg
+from scipy.special import ive
+from ..common import bzs, czs
+import logging
+
+
+def k2w_es1d(ks, species, params, J=8, sort=&#39;real&#39;):
+    &#34;&#34;&#34;Compute dispersion relation for the unmagnetized 1d Vlasov-Poisson
+    system.
+  
+    The basic algorithm follows [1]. The Z function is approximated by a J-pole
+    Pade expansion and the bi-Maxwellian distribution is approximated by a
+    truncated summation of Bessel functions. This way, a linear system is
+    generated that can be solved for complex frequencies as eigenvalues of the
+    equivalent matrix.
+
+    [1]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
+  
+    Args:
+        ks (np.ndarray): An array of `k` values.
+        species (np.ndarray of list): A list of parameters of each plasma
+            species. `species[s]` is the parameters of the sth species,
+            including `q, m, n0, v0, p0`. An example for a
+            plasma with isothermal electrons and adiabatic:
+
+                species = np.array([  
+                    [-1,  1, 1, 0, 0.25],  # electron  
+                    [+1, 25, 1, 0, 0.81],  # ion  
+                ])
+
+        params (dict): A dictionary of relevant parameters. Here, the used ones
+            are `epsilon0`.
+        J (int): Order of Pade polynomials to be used. Supported values are `8`
+            and `12`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+
+    Returns:
+        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+            `kx` value.
+    &#34;&#34;&#34;
+    q, m, n, v, p = np.rollaxis(species, axis=1)
+    eps0 = params[&#39;epsilon0&#39;]
+    vt = np.sqrt(2. * p / n / m)
+    lambdaD = np.sqrt(eps0 * p / (n * q)**2)
+    S = len(q)
+
+    bz, cz = bzs[J], czs[J]
+    B = np.zeros([S * J], dtype=np.complex128)
+    C = np.zeros([S * J], dtype=np.complex128)
+    m = 0
+    for s in range(S):
+        for j in range(J):
+            B[m] = bz[j] * cz[j] * vt[s] / (lambdaD[s]**2)
+            C[m] = v[s] + cz[j] * vt[s]
+            m += 1
+
+    SJ = S * J
+    ws = np.empty((len(ks), SJ), dtype=np.complex128)
+    M = np.empty((SJ, SJ), dtype=np.complex128)
+    for ik, k in enumerate(ks):
+        for m in range(SJ):
+            M[m, :] = -B[m] / k
+            M[m, m] += C[m] * k
+        w = scipy.linalg.eigvals(M)
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        w = w[sort_idx]
+
+        ws[ik, :] = w
+
+    return np.array(ws)
+
+
+def k2w_es3d(
+        kxs,
+        kzs,
+        species,
+        params,
+        isMag=None,
+        J=8,
+        N=10,
+        check_convergence=True,
+        convergence_thresh=0.975,
+        sort=&#34;real&#34;,
+        dry_run=False,
+):
+    &#34;&#34;&#34;
+    Compute electrostatic dispersion relation for a magnetized Vlasov-Poisson
+    system assuming the background magnetic field along `z` and the wavevector
+    `k` can have components along `x` and `z`, i.e., the perpendicular and
+    parallel directions.
+  
+    The basic algorithm follows [1]. The Z function is approximated by a J-pole
+    Pade expansion and the bi-Maxwellian distribution is approximated by a
+    truncated summation of Bessel functions. This way, a linear system is
+    generated that can be solved for complex frequencies as eigenvalues of the
+    equivalent matrix.
+
+    [1]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
+  
+    Args:
+        kxs (np.ndarray): Wavevector component values along `x`.
+        kzs (np.ndarray): Wavevector component values along `z`.
+        species (np.ndarray): A list of parameters of each plasma species.
+          `species[s]` are the parameters of the `s`th species, including
+          `q, m, n, v0x, v0z, p0x, p0z`.
+        params (dict): A dictionary of relevant parameters. Here, the used
+          ones are `epsilon0` and `Bz`.
+        isMag (list or None): A list of booleans to indicate wether each species is
+            magnetized. If not set, all species are assumed to be magnetized.
+        J (int): Order of Pade approximation. One of (`8`, `12`).
+        N (int): Highest order of cylctron harmonic to include in the Bessel
+          expansion of the bi-Maxwellian distribution. If `check_convergence`
+          is set to True, `N` will be increased until the expansion coefficients
+          add up to greater than a threshold value set by `convergence_thresh`.
+        check_convergence (bool): See option `N`. Default is True.
+        convergence_thresh (float): See option `N`. Default is 0.975.
+        sort (str): Order for sorting computed frequencies. Default is &#34;real&#34;.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+  
+    Returns:
+        ws (np.ndarray or list): Computed frequencies in a list. `ws[ik]` is the
+          solution for the `ik`th wavevector. The result is packed as a
+          `np.ndarray` if the `N` values used for all `k` are the same.
+    &#34;&#34;&#34;
+    q, m, n, vx, vz, px, pz = np.rollaxis(np.array(species), axis=1)
+    eps0 = params[&#39;epsilon0&#39;]
+    Bz = params[&#39;Bz&#39;]
+
+    S = len(q)  # number of species
+    lamDz = np.sqrt(eps0 * pz / (n * q)**2)
+    vtz = np.sqrt(2. * pz / n / m)
+    vtx = np.sqrt(2. * px / n / m)
+    wc = q * Bz / m
+
+    if isMag is None:
+        isMag = [True] * S
+    assert (len(isMag) == S)
+
+    bz, cz = bzs[J], czs[J]
+
+    Tz_Tx = (vtz / vtx)**2
+    rc = vtx / np.sqrt(2) / np.abs(wc)
+
+    ks = np.sqrt(kzs**2 + kxs**2)
+    nk = len(ks)
+    ws = []
+    Ns = np.zeros((nk, ), dtype=np.int32)
+
+    if check_convergence:
+        if np.any(isMag):
+            for ik in range(nk):
+                Nmax = N
+                kz = kzs[ik]
+                kp = kxs[ik]
+                kp_rc2m = ((kp * rc[isMag])**2).max()
+                found = False
+                while (not found):
+                    bessSum = ive(range(-Nmax, Nmax + 1), kp_rc2m).sum()
+                    if bessSum &lt; convergence_thresh:
+                        Nmax = Nmax + 1
+                    else:
+                        found = True
+                        if ik == len(ks) - 1:
+                            logging.debug(
+                                &#34;(kp*rc)^2 {}, N {}, bessSum {}&#34;.format(
+                                    kp_rc2m, Nmax, bessSum))
+                Ns[ik] = Nmax
+    logging.debug(&#34;Ns {}&#34;.format(Ns))
+    if dry_run:
+        return
+
+    for ik, k in enumerate(ks):
+        kz = kzs[ik]
+        kp = kxs[ik]
+
+        N4k = Ns[ik]  # the number of terms to keep for k
+        SNJ = S * (2 * N4k + 1) * J
+        M = np.zeros((SNJ, SNJ), dtype=np.complex128)
+        B = np.zeros([SNJ], dtype=np.complex128)
+        C = np.zeros([SNJ], dtype=np.complex128)
+        m = 0
+        for s in range(S):
+            if isMag[s]:
+                for n in range(-N4k, N4k + 1):
+                    bessel = ive(n, (kp * rc[s])**2)  # modified Bessel function
+                    for j in range(J):
+                        B[m] = bessel * bz[j] \
+                            * (cz[j] * kz * vtz[s] + n * wc[s] * Tz_Tx[s]) \
+                            / (lamDz[s] * k)**2
+                        C[m] = kz * vz[s] + kp * vx[s] + n * wc[s] \
+                             + cz[j] * kz * vtz[s]
+                        m += 1
+            else:
+                bessel = 1. / (2. * N4k + 1.)
+                for n in range(-N4k, N4k + 1):
+                    for j in range(J):
+                        B[m] = bessel * bz[j] * (cz[j] * k * vtz[s]) \
+                             / (lamDz[s] * k)**2
+                        C[m] = kz * vz[s] + kp * vx[s] + cz[j] * k * vtz[s]
+                        m += 1
+
+        for m in range(SNJ):
+            M[m, :] = -B[m]
+            M[m, m] += C[m]
+
+        w = scipy.linalg.eigvals(M)
+
+        sort_idx = slice(None)
+        if sort in [&#34;imag&#34;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#34;real&#34;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws.append(w[sort_idx])
+
+    if Ns.min() == Ns.max():
+        # if different k has different N, the size of ws are different
+        return np.array(ws)
+    else:
+        return ws</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="xeon.vlasov.vlasov_es.k2w_es1d"><code class="name flex">
+<span>def <span class="ident">k2w_es1d</span></span>(<span>ks, species, params, J=8, sort='real')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Compute dispersion relation for the unmagnetized 1d Vlasov-Poisson
+system.</p>
+<p>The basic algorithm follows <a href="https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf">1</a>. The Z function is approximated by a J-pole
+Pade expansion and the bi-Maxwellian distribution is approximated by a
+truncated summation of Bessel functions. This way, a linear system is
+generated that can be solved for complex frequencies as eigenvalues of the
+equivalent matrix.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ks</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of <code>k</code> values.</dd>
+<dt><strong><code>species</code></strong> :&ensp;<code>np.ndarray</code> of <code>list</code></dt>
+<dd>A list of parameters of each plasma
+species. <code>species[s]</code> is the parameters of the sth species,
+including <code>q, m, n0, v0, p0</code>. An example for a
+plasma with isothermal electrons and adiabatic:<pre><code>species = np.array([  
+    [-1,  1, 1, 0, 0.25],  # electron  
+    [+1, 25, 1, 0, 0.81],  # ion  
+])
+</code></pre>
+</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary of relevant parameters. Here, the used ones
+are <code>epsilon0</code>.</dd>
+<dt><strong><code>J</code></strong> :&ensp;<code>int</code></dt>
+<dd>Order of Pade polynomials to be used. Supported values are <code>8</code>
+and <code>12</code>.</dd>
+<dt><strong><code>sort</code></strong> :&ensp;<code>str</code></dt>
+<dd><code>'real'</code> or <code>'imag'</code> or <code>'none'</code>. Order to sort results.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ws</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd><code>ws[ik, :]</code> is the maginary frequency for the <code>ik</code>'th
+<code>kx</code> value.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def k2w_es1d(ks, species, params, J=8, sort=&#39;real&#39;):
+    &#34;&#34;&#34;Compute dispersion relation for the unmagnetized 1d Vlasov-Poisson
+    system.
+  
+    The basic algorithm follows [1]. The Z function is approximated by a J-pole
+    Pade expansion and the bi-Maxwellian distribution is approximated by a
+    truncated summation of Bessel functions. This way, a linear system is
+    generated that can be solved for complex frequencies as eigenvalues of the
+    equivalent matrix.
+
+    [1]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
+  
+    Args:
+        ks (np.ndarray): An array of `k` values.
+        species (np.ndarray of list): A list of parameters of each plasma
+            species. `species[s]` is the parameters of the sth species,
+            including `q, m, n0, v0, p0`. An example for a
+            plasma with isothermal electrons and adiabatic:
+
+                species = np.array([  
+                    [-1,  1, 1, 0, 0.25],  # electron  
+                    [+1, 25, 1, 0, 0.81],  # ion  
+                ])
+
+        params (dict): A dictionary of relevant parameters. Here, the used ones
+            are `epsilon0`.
+        J (int): Order of Pade polynomials to be used. Supported values are `8`
+            and `12`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+
+    Returns:
+        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+            `kx` value.
+    &#34;&#34;&#34;
+    q, m, n, v, p = np.rollaxis(species, axis=1)
+    eps0 = params[&#39;epsilon0&#39;]
+    vt = np.sqrt(2. * p / n / m)
+    lambdaD = np.sqrt(eps0 * p / (n * q)**2)
+    S = len(q)
+
+    bz, cz = bzs[J], czs[J]
+    B = np.zeros([S * J], dtype=np.complex128)
+    C = np.zeros([S * J], dtype=np.complex128)
+    m = 0
+    for s in range(S):
+        for j in range(J):
+            B[m] = bz[j] * cz[j] * vt[s] / (lambdaD[s]**2)
+            C[m] = v[s] + cz[j] * vt[s]
+            m += 1
+
+    SJ = S * J
+    ws = np.empty((len(ks), SJ), dtype=np.complex128)
+    M = np.empty((SJ, SJ), dtype=np.complex128)
+    for ik, k in enumerate(ks):
+        for m in range(SJ):
+            M[m, :] = -B[m] / k
+            M[m, m] += C[m] * k
+        w = scipy.linalg.eigvals(M)
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        w = w[sort_idx]
+
+        ws[ik, :] = w
+
+    return np.array(ws)</code></pre>
+</details>
+</dd>
+<dt id="xeon.vlasov.vlasov_es.k2w_es3d"><code class="name flex">
+<span>def <span class="ident">k2w_es3d</span></span>(<span>kxs, kzs, species, params, isMag=None, J=8, N=10, check_convergence=True, convergence_thresh=0.975, sort='real', dry_run=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Compute electrostatic dispersion relation for a magnetized Vlasov-Poisson
+system assuming the background magnetic field along <code>z</code> and the wavevector
+<code>k</code> can have components along <code>x</code> and <code>z</code>, i.e., the perpendicular and
+parallel directions.</p>
+<p>The basic algorithm follows <a href="https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf">1</a>. The Z function is approximated by a J-pole
+Pade expansion and the bi-Maxwellian distribution is approximated by a
+truncated summation of Bessel functions. This way, a linear system is
+generated that can be solved for complex frequencies as eigenvalues of the
+equivalent matrix.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>kxs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Wavevector component values along <code>x</code>.</dd>
+<dt><strong><code>kzs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Wavevector component values along <code>z</code>.</dd>
+<dt><strong><code>species</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A list of parameters of each plasma species.
+<code>species[s]</code> are the parameters of the <code>s</code>th species, including
+<code>q, m, n, v0x, v0z, p0x, p0z</code>.</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary of relevant parameters. Here, the used
+ones are <code>epsilon0</code> and <code>Bz</code>.</dd>
+<dt><strong><code>isMag</code></strong> :&ensp;<code>list</code> or <code>None</code></dt>
+<dd>A list of booleans to indicate wether each species is
+magnetized. If not set, all species are assumed to be magnetized.</dd>
+<dt><strong><code>J</code></strong> :&ensp;<code>int</code></dt>
+<dd>Order of Pade approximation. One of (<code>8</code>, <code>12</code>).</dd>
+<dt><strong><code>N</code></strong> :&ensp;<code>int</code></dt>
+<dd>Highest order of cylctron harmonic to include in the Bessel
+expansion of the bi-Maxwellian distribution. If <code>check_convergence</code>
+is set to True, <code>N</code> will be increased until the expansion coefficients
+add up to greater than a threshold value set by <code>convergence_thresh</code>.</dd>
+<dt><strong><code>check_convergence</code></strong> :&ensp;<code>bool</code></dt>
+<dd>See option <code>N</code>. Default is True.</dd>
+<dt><strong><code>convergence_thresh</code></strong> :&ensp;<code>float</code></dt>
+<dd>See option <code>N</code>. Default is 0.975.</dd>
+<dt><strong><code>sort</code></strong> :&ensp;<code>str</code></dt>
+<dd>Order for sorting computed frequencies. Default is "real".</dd>
+<dt><strong><code>sort</code></strong> :&ensp;<code>str</code></dt>
+<dd><code>'real'</code> or <code>'imag'</code> or <code>'none'</code>. Order to sort results.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ws</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
+<dd>Computed frequencies in a list. <code>ws[ik]</code> is the
+solution for the <code>ik</code>th wavevector. The result is packed as a
+<code>np.ndarray</code> if the <code>N</code> values used for all <code>k</code> are the same.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def k2w_es3d(
+        kxs,
+        kzs,
+        species,
+        params,
+        isMag=None,
+        J=8,
+        N=10,
+        check_convergence=True,
+        convergence_thresh=0.975,
+        sort=&#34;real&#34;,
+        dry_run=False,
+):
+    &#34;&#34;&#34;
+    Compute electrostatic dispersion relation for a magnetized Vlasov-Poisson
+    system assuming the background magnetic field along `z` and the wavevector
+    `k` can have components along `x` and `z`, i.e., the perpendicular and
+    parallel directions.
+  
+    The basic algorithm follows [1]. The Z function is approximated by a J-pole
+    Pade expansion and the bi-Maxwellian distribution is approximated by a
+    truncated summation of Bessel functions. This way, a linear system is
+    generated that can be solved for complex frequencies as eigenvalues of the
+    equivalent matrix.
+
+    [1]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
+  
+    Args:
+        kxs (np.ndarray): Wavevector component values along `x`.
+        kzs (np.ndarray): Wavevector component values along `z`.
+        species (np.ndarray): A list of parameters of each plasma species.
+          `species[s]` are the parameters of the `s`th species, including
+          `q, m, n, v0x, v0z, p0x, p0z`.
+        params (dict): A dictionary of relevant parameters. Here, the used
+          ones are `epsilon0` and `Bz`.
+        isMag (list or None): A list of booleans to indicate wether each species is
+            magnetized. If not set, all species are assumed to be magnetized.
+        J (int): Order of Pade approximation. One of (`8`, `12`).
+        N (int): Highest order of cylctron harmonic to include in the Bessel
+          expansion of the bi-Maxwellian distribution. If `check_convergence`
+          is set to True, `N` will be increased until the expansion coefficients
+          add up to greater than a threshold value set by `convergence_thresh`.
+        check_convergence (bool): See option `N`. Default is True.
+        convergence_thresh (float): See option `N`. Default is 0.975.
+        sort (str): Order for sorting computed frequencies. Default is &#34;real&#34;.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+  
+    Returns:
+        ws (np.ndarray or list): Computed frequencies in a list. `ws[ik]` is the
+          solution for the `ik`th wavevector. The result is packed as a
+          `np.ndarray` if the `N` values used for all `k` are the same.
+    &#34;&#34;&#34;
+    q, m, n, vx, vz, px, pz = np.rollaxis(np.array(species), axis=1)
+    eps0 = params[&#39;epsilon0&#39;]
+    Bz = params[&#39;Bz&#39;]
+
+    S = len(q)  # number of species
+    lamDz = np.sqrt(eps0 * pz / (n * q)**2)
+    vtz = np.sqrt(2. * pz / n / m)
+    vtx = np.sqrt(2. * px / n / m)
+    wc = q * Bz / m
+
+    if isMag is None:
+        isMag = [True] * S
+    assert (len(isMag) == S)
+
+    bz, cz = bzs[J], czs[J]
+
+    Tz_Tx = (vtz / vtx)**2
+    rc = vtx / np.sqrt(2) / np.abs(wc)
+
+    ks = np.sqrt(kzs**2 + kxs**2)
+    nk = len(ks)
+    ws = []
+    Ns = np.zeros((nk, ), dtype=np.int32)
+
+    if check_convergence:
+        if np.any(isMag):
+            for ik in range(nk):
+                Nmax = N
+                kz = kzs[ik]
+                kp = kxs[ik]
+                kp_rc2m = ((kp * rc[isMag])**2).max()
+                found = False
+                while (not found):
+                    bessSum = ive(range(-Nmax, Nmax + 1), kp_rc2m).sum()
+                    if bessSum &lt; convergence_thresh:
+                        Nmax = Nmax + 1
+                    else:
+                        found = True
+                        if ik == len(ks) - 1:
+                            logging.debug(
+                                &#34;(kp*rc)^2 {}, N {}, bessSum {}&#34;.format(
+                                    kp_rc2m, Nmax, bessSum))
+                Ns[ik] = Nmax
+    logging.debug(&#34;Ns {}&#34;.format(Ns))
+    if dry_run:
+        return
+
+    for ik, k in enumerate(ks):
+        kz = kzs[ik]
+        kp = kxs[ik]
+
+        N4k = Ns[ik]  # the number of terms to keep for k
+        SNJ = S * (2 * N4k + 1) * J
+        M = np.zeros((SNJ, SNJ), dtype=np.complex128)
+        B = np.zeros([SNJ], dtype=np.complex128)
+        C = np.zeros([SNJ], dtype=np.complex128)
+        m = 0
+        for s in range(S):
+            if isMag[s]:
+                for n in range(-N4k, N4k + 1):
+                    bessel = ive(n, (kp * rc[s])**2)  # modified Bessel function
+                    for j in range(J):
+                        B[m] = bessel * bz[j] \
+                            * (cz[j] * kz * vtz[s] + n * wc[s] * Tz_Tx[s]) \
+                            / (lamDz[s] * k)**2
+                        C[m] = kz * vz[s] + kp * vx[s] + n * wc[s] \
+                             + cz[j] * kz * vtz[s]
+                        m += 1
+            else:
+                bessel = 1. / (2. * N4k + 1.)
+                for n in range(-N4k, N4k + 1):
+                    for j in range(J):
+                        B[m] = bessel * bz[j] * (cz[j] * k * vtz[s]) \
+                             / (lamDz[s] * k)**2
+                        C[m] = kz * vz[s] + kp * vx[s] + cz[j] * k * vtz[s]
+                        m += 1
+
+        for m in range(SNJ):
+            M[m, :] = -B[m]
+            M[m, m] += C[m]
+
+        w = scipy.linalg.eigvals(M)
+
+        sort_idx = slice(None)
+        if sort in [&#34;imag&#34;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#34;real&#34;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws.append(w[sort_idx])
+
+    if Ns.min() == Ns.max():
+        # if different k has different N, the size of ws are different
+        return np.array(ws)
+    else:
+        return ws</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="xeon.vlasov" href="index.html">xeon.vlasov</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="xeon.vlasov.vlasov_es.k2w_es1d" href="#xeon.vlasov.vlasov_es.k2w_es1d">k2w_es1d</a></code></li>
+<li><code><a title="xeon.vlasov.vlasov_es.k2w_es3d" href="#xeon.vlasov.vlasov_es.k2w_es3d">k2w_es3d</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

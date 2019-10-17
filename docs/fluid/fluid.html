@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.1" />
+<title>xeon.fluid.fluid API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>xeon.fluid.fluid</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">__all__ = [&#39;k2w_es1d&#39;, &#39;k2w_es3d&#39;, &#39;k2w_em3d&#39;]
+
+import numpy as np
+import scipy.linalg
+
+
+def k2w_es1d(kxs, species, params, sort=&#39;real&#39;, eigenvector=False):
+    &#34;&#34;&#34;Compute dispersion relation for a 1d multifluid-Poisson system.
+
+    Args:
+        kxs (np.ndarray): An array of wavevector component values along `x`.
+        species (np.ndarray or list): A `nSpecies*nComponents` matrix.
+            The components are: `q, m, n0, v0x, p0, gamma`. An example:
+
+                species = np.array([  
+                    [q_e, m_e, n0_e, v0x_e, p0_e, gamma_e],  # electron  
+                    [q_i, m_i, n0_i, v0x_i, p0_i, gamma_i],  # ion  
+                ])
+
+        params (dict): A dictionary with keys `epsilon0`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+        eigenvector (bool): Switch to return eigenvector in addition to
+            eigenvalues (frequencies).
+
+    Returns:
+        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+            `kx` value.
+        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
+            corresponding to the eigenvalue `w[ik, is]` is the column
+            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+    &#34;&#34;&#34;
+    NN, VX = range(2)
+
+    q, m, n, vx, p, gamma = np.rollaxis(species, axis=1)
+    epsilon0 = params[&#39;epsilon0&#39;]
+
+    rho = n * m
+    cs2 = gamma * p / rho
+
+    nSpecies = len(q)
+    nSolutions = 2 * nSpecies
+    nk = len(kxs)
+
+    M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
+    ws = np.zeros((nk, nSolutions), dtype=np.complex128)
+    if eigenvector:
+        vrs = np.zeros((nk, nSolutions, nSolutions), dtype=np.complex128)
+
+    for ik in range(nk):
+        M.fill(0)
+        kx = kxs[ik]
+        for j in range(nSpecies):
+            idx = j * 2  # first index of fluid variables, i.e., number density
+
+            # dn due to dn
+            M[idx + NN, idx + NN] = -1j * kx * vx[j]
+            # dn due to dvx
+            M[idx + NN, idx + VX] = -1j * kx * n[j]
+
+            # dvi due to dvi
+            M[idx + VX, idx + VX] = -1j * kx * vx[j]
+
+            # dvx due to dn (from dp, adiabatic EoS)
+            M[idx + VX, idx + NN] = -1j * kx * cs2[j] / n[j]
+
+            # dvx due to dn of all species (from phi or Ex, Gauss&#39;s law)
+            for s in range(nSpecies):
+                M[idx + VX, s * 2 + NN] += (q[j] / m[j]) * q[s] \
+                                         * (-1j / kx /epsilon0)
+
+        if eigenvector:
+            d, vr = scipy.linalg.eig(M, right=True)
+        else:
+            d = scipy.linalg.eigvals(M)
+
+        w = 1j * d
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws[ik, :] = w[sort_idx]
+
+        if eigenvector:
+            vrs[ik, ...] = vr[:, sort_idx]
+
+    if eigenvector:
+        return ws, vrs
+    else:
+        return ws
+
+
+def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
+    &#34;&#34;&#34;Compute dispersion relation for a 3d multifluid-Poisson system with
+    background magnetic field along `z` and wavevector along `x` and `z`.
+
+    Args:
+        kxs (np.ndarray): An array of wavevector component along `x`.
+        kzs (np.ndarray): An array of wavevector component along `z`.
+        species (np.ndarray): A `nSpecies*nComponents` matrix. The components
+            are: `q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp`.
+            An example:
+
+                species = np.array([
+                    [q_e, m_e, n0_e, v0x_e, v0z_e, p0para_e, p0perp_e,
+                     gamma_para_e, gamma_perp_e],  # electron
+                    [q_i, m_i, n0_i, v0x_i, v0z_i, p0para_i, p0perp_i,
+                     gamma_para_i, gamma_perp_i],  # ion
+                ])
+        params (dict): A dictionary with keys `Bz`, `epsilon0`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+        eigenvector (bool): Switch to return eigenvector in addition to
+            eigenvalues (frequencies).
+
+    Returns:
+        ws: `ws[ik, :]` is the maginary frequency for the `ik`&#39;th `(kx, kz)`
+            value.
+        vrs: `vrs[ik, ...]` is the normalized right eigenvector corresponding to
+            the eigenvalue `w[ik, is]` is the column `vr[ik, :, is]`. Only
+            returned if ``eigenvector=True``.
+    &#34;&#34;&#34;
+    NN, VX, VZ = range(3)
+
+    q, m, n, vx, vz, p_para, p_perp, gamma_para, gamma_perp = \
+            np.rollaxis(species, axis=1)
+    B = params[&#39;Bz&#39;]
+    epsilon0 = params[&#39;epsilon0&#39;]
+
+    rho = n * m
+    cs_para2 = gamma_para * p_para / rho
+    cs_perp2 = gamma_perp * p_perp / rho
+
+    nSpecies = len(q)
+    nSolutions = 3 * nSpecies  # EM
+    nk = len(kxs)
+
+    M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
+    ws = np.zeros((nk, nSolutions), dtype=np.complex128)
+    if eigenvector:
+        vrs = np.zeros((nk, nSolutions, nSolutions), dtype=np.complex128)
+
+    for ik in range(nk):
+        M.fill(0)
+        kx = kxs[ik]
+        kz = kzs[ik]
+        k2 = kx**2 + kz**2
+        for j in range(nSpecies):
+            idx = j * 3  # first index of fluid variables, i.e., number density
+
+            # dn due to dn
+            M[idx + NN, idx + NN] = -1j * (kx * vx[j] + kz * vz[j])
+            # dn due to dvx
+            M[idx + NN, idx + VX] = -1j * kx * n[j]
+            # dn due to dvz
+            M[idx + NN, idx + VZ] = -1j * kz * n[j]
+
+            # dvi due to dvi
+            M[idx + VX, idx + VX] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VZ, idx + VZ] = -1j * (kx * vx[j] + kz * vz[j])
+
+            # dvx due to dn (from dp, adiabatic EoS)
+            M[idx + VX, idx + NN] = -1j * kx * cs_perp2[j] / n[j]
+            # dvz due to dn (from dp, adiabatic EoS)
+            M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
+
+            # dvx due to dn of all species (from phi or E, Gauss&#39;s law)
+            for s in range(nSpecies):
+                idxs = s * 3
+                M[idx + VX, idxs + NN] += (q[j] / m[j]) * q[s] \
+                                        * (-1j * kx / k2 /epsilon0)
+                M[idx + VZ, idxs + NN] += (q[j] / m[j]) * q[s] \
+                                        * (-1j * kz / k2 /epsilon0)
+
+        if eigenvector:
+            d, vr = scipy.linalg.eig(M, right=True)
+        else:
+            d = scipy.linalg.eigvals(M)
+
+        w = 1j * d
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws[ik, :] = w[sort_idx]
+
+        if eigenvector:
+            vrs[ik, ...] = vr[:, sort_idx]
+
+    if eigenvector:
+        return ws, vrs
+    else:
+        return ws
+
+
+def k2w_em3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
+    &#34;&#34;&#34;Compute dispersion relation for a 3d multifluid-Maxwell system with the
+    background magnetic field along `z` and wavevector `k` along `x` and `z`.
+
+    The basic algorithm is, for each `(kx, kz)`, find
+    `w = -1j * (eigenvalues of M)`. Here, `M` is the matrix for the right hand
+    side of linearized equations. Assume background magnetic field to be along
+    `z` and `ky=0`.
+
+    Relativistic effects, collisions, and spatial gradients are ignored.
+
+    Args:
+        kxs (np.ndarray): An array of wavevector component along `x`.
+        kzs (np.ndarray): An array of wavevector component along `z`.
+        species (np.ndarray): A `nSpecies*nComponents` matrix. The components
+            are: `q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp`.
+            An example for plasma with isothermal electrons and adiabatic ions:  
+
+                species = np.array([
+                    [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0para_e, p0perp_e,
+                     gamma_para_e, gamma_perp_e],  # electron
+                    [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0para_i, p0perp_i,
+                     gamma_para_i, gamma_perp_i],  # ion
+                ])
+
+        params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+        eigenvector (bool): Switch to return eigenvector in addition to
+            eigenvalues (frequencies).
+
+    Returns:
+        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+            `(kx, kz)` value.
+        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
+            corresponding to the eigenvalue `w[ik, is]` is the column
+            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+    &#34;&#34;&#34;
+    NN, VX, VY, VZ = range(4)
+    EX, EY, EZ, BX, BY, BZ = range(6)
+
+    q, m, n, vx, vy, vz, p_para, p_perp, gamma_para, gamma_perp = \
+            np.rollaxis(species, axis=1)
+    B = params[&#39;Bz&#39;]
+    c2 = params[&#39;c&#39;]**2  # light speed ^ 2
+    epsilon0 = params[&#39;epsilon0&#39;]
+
+    rho = n * m
+    cs_para2 = gamma_para * p_para / rho
+    cs_perp2 = gamma_perp * p_perp / rho
+    if (np.abs(B) &gt; np.finfo(np.float64).eps * 1e3):
+        Delta = (p_para - p_perp) / B
+    else:
+        Delta = np.zeros((nSpecies))
+    wc = q * B / m
+
+    nSpecies = len(q)
+    nSolutions = 4 * nSpecies + 6  # EM
+    idxEM = 4 * nSpecies  # first index of EM field, i.e., Ex
+    nk = len(kxs)
+
+    M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
+    ws = np.zeros((nk, nSolutions), dtype=np.complex128)
+    if eigenvector:
+        vrs = np.zeros((nk, nSolutions, nSolutions), dtype=np.complex128)
+
+    for ik in range(nk):
+        M.fill(0)
+        kx = kxs[ik]
+        kz = kzs[ik]
+        for j in range(nSpecies):
+            idx = j * 4  # first index of fluid variables, i.e., number density
+
+            # dn due to dn
+            M[idx + NN, idx + NN] = -1j * (kx * vx[j] + kz * vz[j])
+            # dn due to dvx
+            M[idx + NN, idx + VX] = -1j * kx * n[j]
+            # dn due to dvz
+            M[idx + NN, idx + VZ] = -1j * kz * n[j]
+
+            # dvi due to dvi
+            M[idx + VX, idx + VX] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VY, idx + VY] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VZ, idx + VZ] = -1j * (kx * vx[j] + kz * vz[j])
+
+            # dvx due to dn (from dp, adiabatic EoS)
+            M[idx + VX, idx + NN] = -1j * kx * cs_perp2[j] / n[j]
+            # dvz due to dn (from dp, adiabatic EoS)
+            M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
+            # dvx due to dvy (from vxB force)
+            M[idx + VX, idx + VY] += wc[j]
+            # dvy due to dvx (from vxB force)
+            M[idx + VY, idx + VX] -= wc[j]
+
+            # dvi due to dEi
+            M[idx + VX, idxEM + EX] = q[j] / m[j]
+            M[idx + VY, idxEM + EY] = q[j] / m[j]
+            M[idx + VZ, idxEM + EZ] = q[j] / m[j]
+            # dvx due to dBy and dBz
+            M[idx + VX, idxEM + BY] = -q[j] / m[j] * vz[j]
+            M[idx + VX, idxEM + BZ] = +q[j] / m[j] * vy[j]
+            # dvy due to dBx and dBz
+            M[idx + VY, idxEM + BX] = +q[j] / m[j] * vz[j]
+            M[idx + VY, idxEM + BZ] = -q[j] / m[j] * vx[j]
+            # dvz due to dBx and dBy
+            M[idx + VZ, idxEM + BX] = -q[j] / m[j] * vy[j]
+            M[idx + VZ, idxEM + BY] = +q[j] / m[j] * vx[j]
+
+            # dvi due to dBi and anisotropy
+            M[idx + VX, idxEM + BX] += -1j * kz * Delta[j] / rho[j]
+            M[idx + VY, idxEM + BY] += -1j * kz * Delta[j] / rho[j]
+            M[idx + VZ, idxEM + BX] += -1j * kx * Delta[j] / rho[j]
+
+            # dEi due to dn
+            M[idxEM + EX, idx] = -q[j] * vx[j] / epsilon0
+            M[idxEM + EY, idx] = -q[j] * vy[j] / epsilon0
+            M[idxEM + EZ, idx] = -q[j] * vz[j] / epsilon0
+
+            # dEi due to dvi
+            M[idxEM + EX, idx + VX] = -q[j] * n[j] / epsilon0
+            M[idxEM + EY, idx + VY] = -q[j] * n[j] / epsilon0
+            M[idxEM + EZ, idx + VZ] = -q[j] * n[j] / epsilon0
+
+        # dE due to dB
+        M[idxEM + EX, idxEM + BY] = -1j * kz * c2
+        M[idxEM + EY, idxEM + BX] = +1j * kz * c2
+        M[idxEM + EY, idxEM + BZ] = -1j * kx * c2
+        M[idxEM + EZ, idxEM + BY] = +1j * kx * c2
+
+        # dB due to dE
+        M[idxEM + BX, idxEM + EY] = +1j * kz
+        M[idxEM + BY, idxEM + EX] = -1j * kz
+        M[idxEM + BY, idxEM + EZ] = +1j * kx
+        M[idxEM + BZ, idxEM + EY] = -1j * kx
+
+        if eigenvector:
+            d, vr = scipy.linalg.eig(M, right=True)
+        else:
+            d = scipy.linalg.eigvals(M)
+
+        w = 1j * d
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws[ik, :] = w[sort_idx]
+
+        if eigenvector:
+            vrs[ik, ...] = vr[:, sort_idx]
+
+    if eigenvector:
+        return ws, vrs
+    else:
+        return ws</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="xeon.fluid.fluid.k2w_em3d"><code class="name flex">
+<span>def <span class="ident">k2w_em3d</span></span>(<span>kxs, kzs, species, params, sort='real', eigenvector=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Compute dispersion relation for a 3d multifluid-Maxwell system with the
+background magnetic field along <code>z</code> and wavevector <code>k</code> along <code>x</code> and <code>z</code>.</p>
+<p>The basic algorithm is, for each <code>(kx, kz)</code>, find
+<code>w = -1j * (eigenvalues of M)</code>. Here, <code>M</code> is the matrix for the right hand
+side of linearized equations. Assume background magnetic field to be along
+<code>z</code> and <code>ky=0</code>.</p>
+<p>Relativistic effects, collisions, and spatial gradients are ignored.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>kxs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of wavevector component along <code>x</code>.</dd>
+<dt><strong><code>kzs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of wavevector component along <code>z</code>.</dd>
+<dt><strong><code>species</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A <code>nSpecies*nComponents</code> matrix. The components
+are: <code>q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp</code>.
+An example for plasma with isothermal electrons and adiabatic ions:
+<pre><code>species = np.array([
+    [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0para_e, p0perp_e,
+     gamma_para_e, gamma_perp_e],  # electron
+    [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0para_i, p0perp_i,
+     gamma_para_i, gamma_perp_i],  # ion
+])
+</code></pre>
+</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary with keys <code>Bz</code>, <code>c</code>, <code>epsilon0</code>.</dd>
+<dt><strong><code>sort</code></strong> :&ensp;<code>str</code></dt>
+<dd><code>'real'</code> or <code>'imag'</code> or <code>'none'</code>. Order to sort results.</dd>
+<dt><strong><code>eigenvector</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Switch to return eigenvector in addition to
+eigenvalues (frequencies).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ws</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd><code>ws[ik, :]</code> is the maginary frequency for the <code>ik</code>'th
+<code>(kx, kz)</code> value.</dd>
+<dt><strong><code>vrs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd><code>vrs[ik, ...]</code> is the normalized right eigenvector
+corresponding to the eigenvalue <code>w[ik, is]</code> is the column
+<code>vr[ik, :, is]</code>. Only returned if <code>eigenvector=True</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def k2w_em3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
+    &#34;&#34;&#34;Compute dispersion relation for a 3d multifluid-Maxwell system with the
+    background magnetic field along `z` and wavevector `k` along `x` and `z`.
+
+    The basic algorithm is, for each `(kx, kz)`, find
+    `w = -1j * (eigenvalues of M)`. Here, `M` is the matrix for the right hand
+    side of linearized equations. Assume background magnetic field to be along
+    `z` and `ky=0`.
+
+    Relativistic effects, collisions, and spatial gradients are ignored.
+
+    Args:
+        kxs (np.ndarray): An array of wavevector component along `x`.
+        kzs (np.ndarray): An array of wavevector component along `z`.
+        species (np.ndarray): A `nSpecies*nComponents` matrix. The components
+            are: `q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp`.
+            An example for plasma with isothermal electrons and adiabatic ions:  
+
+                species = np.array([
+                    [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0para_e, p0perp_e,
+                     gamma_para_e, gamma_perp_e],  # electron
+                    [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0para_i, p0perp_i,
+                     gamma_para_i, gamma_perp_i],  # ion
+                ])
+
+        params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+        eigenvector (bool): Switch to return eigenvector in addition to
+            eigenvalues (frequencies).
+
+    Returns:
+        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+            `(kx, kz)` value.
+        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
+            corresponding to the eigenvalue `w[ik, is]` is the column
+            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+    &#34;&#34;&#34;
+    NN, VX, VY, VZ = range(4)
+    EX, EY, EZ, BX, BY, BZ = range(6)
+
+    q, m, n, vx, vy, vz, p_para, p_perp, gamma_para, gamma_perp = \
+            np.rollaxis(species, axis=1)
+    B = params[&#39;Bz&#39;]
+    c2 = params[&#39;c&#39;]**2  # light speed ^ 2
+    epsilon0 = params[&#39;epsilon0&#39;]
+
+    rho = n * m
+    cs_para2 = gamma_para * p_para / rho
+    cs_perp2 = gamma_perp * p_perp / rho
+    if (np.abs(B) &gt; np.finfo(np.float64).eps * 1e3):
+        Delta = (p_para - p_perp) / B
+    else:
+        Delta = np.zeros((nSpecies))
+    wc = q * B / m
+
+    nSpecies = len(q)
+    nSolutions = 4 * nSpecies + 6  # EM
+    idxEM = 4 * nSpecies  # first index of EM field, i.e., Ex
+    nk = len(kxs)
+
+    M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
+    ws = np.zeros((nk, nSolutions), dtype=np.complex128)
+    if eigenvector:
+        vrs = np.zeros((nk, nSolutions, nSolutions), dtype=np.complex128)
+
+    for ik in range(nk):
+        M.fill(0)
+        kx = kxs[ik]
+        kz = kzs[ik]
+        for j in range(nSpecies):
+            idx = j * 4  # first index of fluid variables, i.e., number density
+
+            # dn due to dn
+            M[idx + NN, idx + NN] = -1j * (kx * vx[j] + kz * vz[j])
+            # dn due to dvx
+            M[idx + NN, idx + VX] = -1j * kx * n[j]
+            # dn due to dvz
+            M[idx + NN, idx + VZ] = -1j * kz * n[j]
+
+            # dvi due to dvi
+            M[idx + VX, idx + VX] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VY, idx + VY] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VZ, idx + VZ] = -1j * (kx * vx[j] + kz * vz[j])
+
+            # dvx due to dn (from dp, adiabatic EoS)
+            M[idx + VX, idx + NN] = -1j * kx * cs_perp2[j] / n[j]
+            # dvz due to dn (from dp, adiabatic EoS)
+            M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
+            # dvx due to dvy (from vxB force)
+            M[idx + VX, idx + VY] += wc[j]
+            # dvy due to dvx (from vxB force)
+            M[idx + VY, idx + VX] -= wc[j]
+
+            # dvi due to dEi
+            M[idx + VX, idxEM + EX] = q[j] / m[j]
+            M[idx + VY, idxEM + EY] = q[j] / m[j]
+            M[idx + VZ, idxEM + EZ] = q[j] / m[j]
+            # dvx due to dBy and dBz
+            M[idx + VX, idxEM + BY] = -q[j] / m[j] * vz[j]
+            M[idx + VX, idxEM + BZ] = +q[j] / m[j] * vy[j]
+            # dvy due to dBx and dBz
+            M[idx + VY, idxEM + BX] = +q[j] / m[j] * vz[j]
+            M[idx + VY, idxEM + BZ] = -q[j] / m[j] * vx[j]
+            # dvz due to dBx and dBy
+            M[idx + VZ, idxEM + BX] = -q[j] / m[j] * vy[j]
+            M[idx + VZ, idxEM + BY] = +q[j] / m[j] * vx[j]
+
+            # dvi due to dBi and anisotropy
+            M[idx + VX, idxEM + BX] += -1j * kz * Delta[j] / rho[j]
+            M[idx + VY, idxEM + BY] += -1j * kz * Delta[j] / rho[j]
+            M[idx + VZ, idxEM + BX] += -1j * kx * Delta[j] / rho[j]
+
+            # dEi due to dn
+            M[idxEM + EX, idx] = -q[j] * vx[j] / epsilon0
+            M[idxEM + EY, idx] = -q[j] * vy[j] / epsilon0
+            M[idxEM + EZ, idx] = -q[j] * vz[j] / epsilon0
+
+            # dEi due to dvi
+            M[idxEM + EX, idx + VX] = -q[j] * n[j] / epsilon0
+            M[idxEM + EY, idx + VY] = -q[j] * n[j] / epsilon0
+            M[idxEM + EZ, idx + VZ] = -q[j] * n[j] / epsilon0
+
+        # dE due to dB
+        M[idxEM + EX, idxEM + BY] = -1j * kz * c2
+        M[idxEM + EY, idxEM + BX] = +1j * kz * c2
+        M[idxEM + EY, idxEM + BZ] = -1j * kx * c2
+        M[idxEM + EZ, idxEM + BY] = +1j * kx * c2
+
+        # dB due to dE
+        M[idxEM + BX, idxEM + EY] = +1j * kz
+        M[idxEM + BY, idxEM + EX] = -1j * kz
+        M[idxEM + BY, idxEM + EZ] = +1j * kx
+        M[idxEM + BZ, idxEM + EY] = -1j * kx
+
+        if eigenvector:
+            d, vr = scipy.linalg.eig(M, right=True)
+        else:
+            d = scipy.linalg.eigvals(M)
+
+        w = 1j * d
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws[ik, :] = w[sort_idx]
+
+        if eigenvector:
+            vrs[ik, ...] = vr[:, sort_idx]
+
+    if eigenvector:
+        return ws, vrs
+    else:
+        return ws</code></pre>
+</details>
+</dd>
+<dt id="xeon.fluid.fluid.k2w_es1d"><code class="name flex">
+<span>def <span class="ident">k2w_es1d</span></span>(<span>kxs, species, params, sort='real', eigenvector=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Compute dispersion relation for a 1d multifluid-Poisson system.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>kxs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of wavevector component values along <code>x</code>.</dd>
+<dt><strong><code>species</code></strong> :&ensp;<code>np.ndarray</code> or <code>list</code></dt>
+<dd>A <code>nSpecies*nComponents</code> matrix.
+The components are: <code>q, m, n0, v0x, p0, gamma</code>. An example:<pre><code>species = np.array([  
+    [q_e, m_e, n0_e, v0x_e, p0_e, gamma_e],  # electron  
+    [q_i, m_i, n0_i, v0x_i, p0_i, gamma_i],  # ion  
+])
+</code></pre>
+</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary with keys <code>epsilon0</code>.</dd>
+<dt><strong><code>sort</code></strong> :&ensp;<code>str</code></dt>
+<dd><code>'real'</code> or <code>'imag'</code> or <code>'none'</code>. Order to sort results.</dd>
+<dt><strong><code>eigenvector</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Switch to return eigenvector in addition to
+eigenvalues (frequencies).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ws</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd><code>ws[ik, :]</code> is the maginary frequency for the <code>ik</code>'th
+<code>kx</code> value.</dd>
+<dt><strong><code>vrs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd><code>vrs[ik, ...]</code> is the normalized right eigenvector
+corresponding to the eigenvalue <code>w[ik, is]</code> is the column
+<code>vr[ik, :, is]</code>. Only returned if <code>eigenvector=True</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def k2w_es1d(kxs, species, params, sort=&#39;real&#39;, eigenvector=False):
+    &#34;&#34;&#34;Compute dispersion relation for a 1d multifluid-Poisson system.
+
+    Args:
+        kxs (np.ndarray): An array of wavevector component values along `x`.
+        species (np.ndarray or list): A `nSpecies*nComponents` matrix.
+            The components are: `q, m, n0, v0x, p0, gamma`. An example:
+
+                species = np.array([  
+                    [q_e, m_e, n0_e, v0x_e, p0_e, gamma_e],  # electron  
+                    [q_i, m_i, n0_i, v0x_i, p0_i, gamma_i],  # ion  
+                ])
+
+        params (dict): A dictionary with keys `epsilon0`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+        eigenvector (bool): Switch to return eigenvector in addition to
+            eigenvalues (frequencies).
+
+    Returns:
+        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+            `kx` value.
+        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
+            corresponding to the eigenvalue `w[ik, is]` is the column
+            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+    &#34;&#34;&#34;
+    NN, VX = range(2)
+
+    q, m, n, vx, p, gamma = np.rollaxis(species, axis=1)
+    epsilon0 = params[&#39;epsilon0&#39;]
+
+    rho = n * m
+    cs2 = gamma * p / rho
+
+    nSpecies = len(q)
+    nSolutions = 2 * nSpecies
+    nk = len(kxs)
+
+    M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
+    ws = np.zeros((nk, nSolutions), dtype=np.complex128)
+    if eigenvector:
+        vrs = np.zeros((nk, nSolutions, nSolutions), dtype=np.complex128)
+
+    for ik in range(nk):
+        M.fill(0)
+        kx = kxs[ik]
+        for j in range(nSpecies):
+            idx = j * 2  # first index of fluid variables, i.e., number density
+
+            # dn due to dn
+            M[idx + NN, idx + NN] = -1j * kx * vx[j]
+            # dn due to dvx
+            M[idx + NN, idx + VX] = -1j * kx * n[j]
+
+            # dvi due to dvi
+            M[idx + VX, idx + VX] = -1j * kx * vx[j]
+
+            # dvx due to dn (from dp, adiabatic EoS)
+            M[idx + VX, idx + NN] = -1j * kx * cs2[j] / n[j]
+
+            # dvx due to dn of all species (from phi or Ex, Gauss&#39;s law)
+            for s in range(nSpecies):
+                M[idx + VX, s * 2 + NN] += (q[j] / m[j]) * q[s] \
+                                         * (-1j / kx /epsilon0)
+
+        if eigenvector:
+            d, vr = scipy.linalg.eig(M, right=True)
+        else:
+            d = scipy.linalg.eigvals(M)
+
+        w = 1j * d
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws[ik, :] = w[sort_idx]
+
+        if eigenvector:
+            vrs[ik, ...] = vr[:, sort_idx]
+
+    if eigenvector:
+        return ws, vrs
+    else:
+        return ws</code></pre>
+</details>
+</dd>
+<dt id="xeon.fluid.fluid.k2w_es3d"><code class="name flex">
+<span>def <span class="ident">k2w_es3d</span></span>(<span>kxs, kzs, species, params, sort='real', eigenvector=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Compute dispersion relation for a 3d multifluid-Poisson system with
+background magnetic field along <code>z</code> and wavevector along <code>x</code> and <code>z</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>kxs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of wavevector component along <code>x</code>.</dd>
+<dt><strong><code>kzs</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of wavevector component along <code>z</code>.</dd>
+<dt><strong><code>species</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A <code>nSpecies*nComponents</code> matrix. The components
+are: <code>q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp</code>.
+An example:<pre><code>species = np.array([
+    [q_e, m_e, n0_e, v0x_e, v0z_e, p0para_e, p0perp_e,
+     gamma_para_e, gamma_perp_e],  # electron
+    [q_i, m_i, n0_i, v0x_i, v0z_i, p0para_i, p0perp_i,
+     gamma_para_i, gamma_perp_i],  # ion
+])
+</code></pre>
+</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary with keys <code>Bz</code>, <code>epsilon0</code>.</dd>
+<dt><strong><code>sort</code></strong> :&ensp;<code>str</code></dt>
+<dd><code>'real'</code> or <code>'imag'</code> or <code>'none'</code>. Order to sort results.</dd>
+<dt><strong><code>eigenvector</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Switch to return eigenvector in addition to
+eigenvalues (frequencies).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ws</code></strong></dt>
+<dd><code>ws[ik, :]</code> is the maginary frequency for the <code>ik</code>'th <code>(kx, kz)</code>
+value.</dd>
+<dt><strong><code>vrs</code></strong></dt>
+<dd><code>vrs[ik, ...]</code> is the normalized right eigenvector corresponding to
+the eigenvalue <code>w[ik, is]</code> is the column <code>vr[ik, :, is]</code>. Only
+returned if <code>eigenvector=True</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
+    &#34;&#34;&#34;Compute dispersion relation for a 3d multifluid-Poisson system with
+    background magnetic field along `z` and wavevector along `x` and `z`.
+
+    Args:
+        kxs (np.ndarray): An array of wavevector component along `x`.
+        kzs (np.ndarray): An array of wavevector component along `z`.
+        species (np.ndarray): A `nSpecies*nComponents` matrix. The components
+            are: `q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp`.
+            An example:
+
+                species = np.array([
+                    [q_e, m_e, n0_e, v0x_e, v0z_e, p0para_e, p0perp_e,
+                     gamma_para_e, gamma_perp_e],  # electron
+                    [q_i, m_i, n0_i, v0x_i, v0z_i, p0para_i, p0perp_i,
+                     gamma_para_i, gamma_perp_i],  # ion
+                ])
+        params (dict): A dictionary with keys `Bz`, `epsilon0`.
+        sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
+        eigenvector (bool): Switch to return eigenvector in addition to
+            eigenvalues (frequencies).
+
+    Returns:
+        ws: `ws[ik, :]` is the maginary frequency for the `ik`&#39;th `(kx, kz)`
+            value.
+        vrs: `vrs[ik, ...]` is the normalized right eigenvector corresponding to
+            the eigenvalue `w[ik, is]` is the column `vr[ik, :, is]`. Only
+            returned if ``eigenvector=True``.
+    &#34;&#34;&#34;
+    NN, VX, VZ = range(3)
+
+    q, m, n, vx, vz, p_para, p_perp, gamma_para, gamma_perp = \
+            np.rollaxis(species, axis=1)
+    B = params[&#39;Bz&#39;]
+    epsilon0 = params[&#39;epsilon0&#39;]
+
+    rho = n * m
+    cs_para2 = gamma_para * p_para / rho
+    cs_perp2 = gamma_perp * p_perp / rho
+
+    nSpecies = len(q)
+    nSolutions = 3 * nSpecies  # EM
+    nk = len(kxs)
+
+    M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
+    ws = np.zeros((nk, nSolutions), dtype=np.complex128)
+    if eigenvector:
+        vrs = np.zeros((nk, nSolutions, nSolutions), dtype=np.complex128)
+
+    for ik in range(nk):
+        M.fill(0)
+        kx = kxs[ik]
+        kz = kzs[ik]
+        k2 = kx**2 + kz**2
+        for j in range(nSpecies):
+            idx = j * 3  # first index of fluid variables, i.e., number density
+
+            # dn due to dn
+            M[idx + NN, idx + NN] = -1j * (kx * vx[j] + kz * vz[j])
+            # dn due to dvx
+            M[idx + NN, idx + VX] = -1j * kx * n[j]
+            # dn due to dvz
+            M[idx + NN, idx + VZ] = -1j * kz * n[j]
+
+            # dvi due to dvi
+            M[idx + VX, idx + VX] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VZ, idx + VZ] = -1j * (kx * vx[j] + kz * vz[j])
+
+            # dvx due to dn (from dp, adiabatic EoS)
+            M[idx + VX, idx + NN] = -1j * kx * cs_perp2[j] / n[j]
+            # dvz due to dn (from dp, adiabatic EoS)
+            M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
+
+            # dvx due to dn of all species (from phi or E, Gauss&#39;s law)
+            for s in range(nSpecies):
+                idxs = s * 3
+                M[idx + VX, idxs + NN] += (q[j] / m[j]) * q[s] \
+                                        * (-1j * kx / k2 /epsilon0)
+                M[idx + VZ, idxs + NN] += (q[j] / m[j]) * q[s] \
+                                        * (-1j * kz / k2 /epsilon0)
+
+        if eigenvector:
+            d, vr = scipy.linalg.eig(M, right=True)
+        else:
+            d = scipy.linalg.eigvals(M)
+
+        w = 1j * d
+
+        sort_idx = slice(None)
+        if sort in [&#39;imag&#39;]:
+            sort_idx = np.argsort(w.imag + 1j * w.real)
+        elif sort in [&#39;real&#39;]:
+            sort_idx = np.argsort(w)
+        elif sort != &#39;none&#39;:
+            raise ValueError(&#39;`sort` value {} not recognized&#39;.format(sort))
+        ws[ik, :] = w[sort_idx]
+
+        if eigenvector:
+            vrs[ik, ...] = vr[:, sort_idx]
+
+    if eigenvector:
+        return ws, vrs
+    else:
+        return ws</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="xeon.fluid" href="index.html">xeon.fluid</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="xeon.fluid.fluid.k2w_em3d" href="#xeon.fluid.fluid.k2w_em3d">k2w_em3d</a></code></li>
+<li><code><a title="xeon.fluid.fluid.k2w_es1d" href="#xeon.fluid.fluid.k2w_es1d">k2w_es1d</a></code></li>
+<li><code><a title="xeon.fluid.fluid.k2w_es3d" href="#xeon.fluid.fluid.k2w_es3d">k2w_es3d</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
