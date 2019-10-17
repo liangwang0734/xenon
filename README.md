@@ -1,4 +1,4 @@
-## MIRROR: A Matrix-based dIspeRsion Relation sOlveR for plasma physics
+## XEON: A matriX-based dispErsion relAtion solver for plasma physics
 
 This is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python. The algorithms are extended from [[1]] and [[2]] with a few changes. Currently, the electromagnetic (EM) kinetic DR solver has not been implemented.
 
@@ -16,8 +16,8 @@ If you prefer the Matlab flavor, or need more complete physics, please refer to 
 Currently, the package is provided only as is. One option to use the package is to make Python aware of its path:
 ```python
 import sys
-sys.path.append("/path/to/mirror/")
-import drPlasma
+sys.path.append("/path/to/xeon/")
+import xeon
 ```
 ### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
