@@ -4,9 +4,8 @@ XEON is a collection of matrix-based plasma dispersion relation (DR) solvers wri
 
 <img src="https://github.com/liangwang0734/xeon/blob/master/docs/bump-on-tail.png" align="right"
      title="Bump-on-tail instability" width="250">
+For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
 ```python
-# For a quick taste of the flavor, following is a snippet
-# to compute the DR for the Bump-on-tail instability:
 species = np.array([
     # parameters of each species
     # q, m, n,   v,     p
