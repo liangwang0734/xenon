@@ -8,7 +8,7 @@ XEON is a collection of matrix-based plasma dispersion relation (DR) solvers wri
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 
 ---
-- Please cite the code at  
+- Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 - Please submit feature request and code discussion through the [Issue Page](https://github.com/liangwang0734/xeon/issues).
 - Any ideas of academic collaboration is welcome at **liang dot wang dot phys AT gmail.com**.
