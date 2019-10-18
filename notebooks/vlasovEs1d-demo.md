@@ -1,5 +1,3 @@
-### Bump-on-tail instability
-
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,6 +7,7 @@ import sys
 sys.path.append('/path/to/xeon')
 import xeon
 
+# DEMO: Bump-on-tail instability
 # parameters of each plasma species
 species = np.array([
     # q, m, n,   v,     p
