@@ -13,14 +13,14 @@ species = np.array([
     [-1, 1, 0.1, 7.071, 0.1],  # beam electron
 ])
 params = dict(epsilon0=1)  # other parameters
-
 ks = np.linspace(0.0001, 0.6, 50)  # an array of wavenumbers
 # for each wavenumber, compute the complex frequencies
 ws = xeon.vlasov.k2w_es1d(ks, species, params)
 
-fig, axs = plt.subplots(1, 2, figsize=(10, 5), sharex=True)
+fig, axs = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
 xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 ```
+For the complete API, see https://liangwang0734.github.io/xeon/
 
 #### How does it work?
 - The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
@@ -31,7 +31,7 @@ xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 - Please submit bug fixes, improvements, feature request and other code discussions to the [Issues Page](https://github.com/liangwang0734/xeon/issues). Pull requests are welcome.
-- Any ideas of academic collaboration is welcome at **liang dot wang dot phys AT gmail.com**.
+- For other issues/discussions, contact **liang dot wang dot phys AT gmail.com**.
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
