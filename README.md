@@ -1,4 +1,5 @@
 ### XEON: A matriX-based dispErsion relatiON solver for plasma physics
+[![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 
 XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
 
