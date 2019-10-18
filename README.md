@@ -30,7 +30,7 @@ xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 #### How do I cite the code?
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
-- Please submit feature request and code discussion through the [Issues Page](https://github.com/liangwang0734/xeon/issues).
+- Please submit bug fixes, improvements, feature request and other code discussions to the [Issues Page](https://github.com/liangwang0734/xeon/issues). Pull requests are welcome.
 - Any ideas of academic collaboration is welcome at **liang dot wang dot phys AT gmail.com**.
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
