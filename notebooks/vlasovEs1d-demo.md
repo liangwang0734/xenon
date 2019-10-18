@@ -1,25 +1,16 @@
-
+### Bump-on-tail instability
 
 ```python
-%matplotlib inline
+# %matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
-
 plt.rcParams['axes.labelsize'] = 'xx-large'
-```
 
-
-```python
 import sys
 sys.path.append('/path/to/xeon')
 import xeon
 from xeon.common import plot_dr
-```
 
-### Bump-on-tail instability
-
-
-```python
 # specify parameters of the background and beam electron species
 species = np.array([
     # q, m, n,   v,     p
@@ -60,6 +51,5 @@ axs[0].set_ylim(-0.5, 2)
 fig.tight_layout()
 ```
 
-
-![png](https://liangwang0734.github.io/xeon/vlasovEs1d-bump-on-tail-demo.png)
+![png](images/vlasovEs1d-demo-bump-on-tail.png)
 
