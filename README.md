@@ -2,7 +2,7 @@
 
 XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]]. 
 
-<img src="https://github.com/liangwang0734/xeon/blob/master/docs/bump-on-tail.png" align="right"
+<img src="docs/bump-on-tail.png" align="right"
      title="Bump-on-tail instability" width="280">
 For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
 ```python
