@@ -27,7 +27,7 @@ def plot_dr(
         pargs0={},
         pargs1={},
 ):
-    """Plot dispersion relation as `k-wr` and `k-wi` dots, where `wr` and `wi`
+    r"""Plot dispersion relation as `k-wr` and `k-wi` dots, where `wr` and `wi`
     are real and imaginary parts of a complex frequency `w`.
 
     Args:

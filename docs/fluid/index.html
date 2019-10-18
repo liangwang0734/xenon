@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.1" />
 <title>xeon.fluid API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Dispersion relation solvers for multifluid plasmas …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,11 +20,44 @@
 <h1 class="title">Module <code>xeon.fluid</code></h1>
 </header>
 <section id="section-intro">
+<h2 id="dispersion-relation-solvers-for-multifluid-plasmas">Dispersion relation solvers for multifluid plasmas.</h2>
+<p>Three versions are implemented:</p>
+<ul>
+<li><code>k2w_es1d</code>: Electrostatic waves in an unmagnetized plasma.</li>
+<li><code>kw2_es3d</code>: Electrostatic waves in a magnetized plasma.</li>
+<li><code>kw2_em3d</code>: Electromagnetic waves in a magnetized plasma.</li>
+</ul>
+<p>The plasmma pressure is allowed to be anisotropic in the magnetized case (es3d
+and em3d).</p>
+<p>Further extension planned (in order of priority from high to low):</p>
+<ul>
+<li>Relativistic effects</li>
+<li>Density/temperature gradients</li>
+<li>Collisions</li>
+</ul>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .fluid import *</code></pre>
+<pre><code class="python">&#34;&#34;&#34;
+## Dispersion relation solvers for multifluid plasmas.
+
+Three versions are implemented:
+
+- `k2w_es1d`: Electrostatic waves in an unmagnetized plasma.
+- `kw2_es3d`: Electrostatic waves in a magnetized plasma.
+- `kw2_em3d`: Electromagnetic waves in a magnetized plasma.
+
+The plasmma pressure is allowed to be anisotropic in the magnetized case (es3d
+and em3d).
+
+Further extension planned (in order of priority from high to low):
+
+- Relativistic effects
+- Density/temperature gradients
+- Collisions
+&#34;&#34;&#34;
+from .fluid import *</code></pre>
 </details>
 </section>
 <section>
@@ -46,7 +79,9 @@
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#dispersion-relation-solvers-for-multifluid-plasmas">Dispersion relation solvers for multifluid plasmas.</a></li>
+</ul>
 </div>
 <ul id="index">
 <li><h3>Super-module</h3>
