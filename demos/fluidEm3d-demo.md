@@ -17,8 +17,6 @@
 
 
 ```python
-
-```python
 """
 DEMO: Waves in a cold plasma
 """
