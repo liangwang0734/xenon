@@ -51,10 +51,10 @@ import xeon
 PyPI and Anaconda distributions will be used starting release 0.2.0.
 
 #### Package structure
-- [`fluid`](fluid): Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
-- [`vlasov`](vlasov): Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
+- [`fluid`](fluid): Multifluid dispersion relation solver supporting anisotropic pressure. `ES1D`, `ES3D`, and `EM3D` version are implemented.
+- [`vlasov`](vlasov): Vlasov dispersion relation solver for a warm plasma. `ES1D` and `ES3D` versions are implemented.
 - [`common`](common): Coefficient generator, convenience tools for visulization, etc.
-- [`notebooks`](notebooks): Demos compiled as Jupyter notebooks. This folder is being consolidated.
+- [`notebooks`](notebooks): Demos compiled as markdown documents. This folder is being consolidated.
 
 #### Usage
 - For the complete API, see https://liangwang0734.github.io/xeon/
