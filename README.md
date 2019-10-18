@@ -1,6 +1,6 @@
 ### XEON: A matriX-based dispErsion relatiON solver for plasma physics
 
-XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3.
+XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]]. 
 
 <img src="https://github.com/liangwang0734/xeon/blob/master/docs/bump-on-tail.png" align="right"
      title="Bump-on-tail instability" width="280">
@@ -25,7 +25,7 @@ xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 ##### How does it work?
 - The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
-- The algorithms are extended from [[1]] and [[2]]. If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
+- If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
 ##### How do I cite the code or collaborate?
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
