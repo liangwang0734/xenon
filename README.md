@@ -28,11 +28,12 @@ For the complete API, see https://liangwang0734.github.io/xeon/
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
-#### How do I cite the code?
-- Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
-[![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
+#### How do I become a user?
+- Xeon is under MIT licence with maximum freedom to use.
 - Please submit bug fixes, improvements, feature request and other code discussions to the [Issues Page](https://github.com/liangwang0734/xeon/issues). Pull requests are welcome.
 - For other issues/discussions, contact liang.wang.phys<img src="demos/images/gm.png" width="12.5%">.
+- Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
+[![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
