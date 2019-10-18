@@ -32,7 +32,7 @@ For the complete API, see https://liangwang0734.github.io/xeon/
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 - Please submit bug fixes, improvements, feature request and other code discussions to the [Issues Page](https://github.com/liangwang0734/xeon/issues). Pull requests are welcome.
-- For other issues/discussions, contact **liang dot wang dot phys AT gmail.com**.
+- For other issues/discussions, contact liang.wang.phys<img src="notebooks/images/gm.png" width="12.5%">.
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
