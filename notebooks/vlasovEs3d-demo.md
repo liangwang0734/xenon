@@ -2,6 +2,7 @@
 """
 DEMO: Electron Bernstein's modes
 """
+
 import matplotlib.pyplot as plt
 import numpy as np
 plt.rcParams['axes.labelsize'] = 'xx-large'
