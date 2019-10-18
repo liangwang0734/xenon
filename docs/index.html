@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.1" />
 <title>xeon API documentation</title>
-<meta name="description" content="XEON: A matriX-based dispErsion relAtion solver for plasma physics …" />
+<meta name="description" content="XEON: A matriX-based dispErsion relatiON solver for plasma physics" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,36 +20,13 @@
 <h1 class="title">Module <code>xeon</code></h1>
 </header>
 <section id="section-intro">
-<h2 id="xeon-a-matrix-based-dispersion-relation-solver-for-plasma-physics">XEON: A matriX-based dispErsion relAtion solver for plasma physics</h2>
-<p>XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python. The algorithms are extended from [[1]] and [[2]]. The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies <code>[w1, w2, w3, ...]</code> are computed as eigenvalues of this matrix for each wavenumber <code>k</code>. Currently, the electromagnetic (EM) kinetic DR solver has not been implemented.</p>
-<p>If you prefer the Matlab flavor, please consider the original implementation, <a href="https://github.com/hsxie/pdrk">BO</a>, by Dr. Huasheng Xie.</p>
-<h3 id="dependencies">Dependencies</h3>
-<ul>
-<li>Modern <a href="https://numpy.org/">numpy</a> and <a href="https://www.scipy.org">scipy</a> are required for computation.</li>
-<li><a href="https://matplotlib.org/">matplotlib</a> is required for using the visualization tool.</li>
-</ul>
-<h3 id="installation">Installation</h3>
-<p>Currently, the package is in development stage and is provided only as is. One option to use the package is to make Python aware of its path:</p>
-<pre><code class="python">import sys
-sys.path.append(&quot;/path/to/xeon/&quot;)
-import xeon
-</code></pre>
-<h3 id="package-structure-and-usage">Package structure and usage</h3>
-<ul>
-<li><code>fluid</code>: Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.</li>
-<li><code>vlasov</code>: Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.</li>
-<li><code>common</code>: Coefficient generator, convenience tools for visulization, etc.</li>
-</ul>
-<p>For the API, see <a href="https://liangwang0734.github.io/xeon/">https://liangwang0734.github.io/xeon/</a></p>
-<h3 id="references">References</h3>
-<p>[[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.<br>
-[[2]] Xie, Huasheng, and Xiao, Yong. "PDRK: A general kinetic dispersion relation solver for magnetized plasma." Plasma Science and Technology 18.2 (2016): 97.</p>
+<p>XEON: A matriX-based dispErsion relatiON solver for plasma physics</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-.. include:: ./README.md
+XEON: A matriX-based dispErsion relatiON solver for plasma physics
 &#34;&#34;&#34;
 
 from . import fluid
@@ -64,7 +41,7 @@ __name__ = &#34;xeon&#34;</code></pre>
 <dl>
 <dt><code class="name"><a title="xeon.common" href="common/index.html">xeon.common</a></code></dt>
 <dd>
-<section class="desc"></section>
+<section class="desc"><p>Coefficient generator, convenience tools for visulization, etc.</p></section>
 </dd>
 <dt><code class="name"><a title="xeon.fluid" href="fluid/index.html">xeon.fluid</a></code></dt>
 <dd>
@@ -86,15 +63,7 @@ __name__ = &#34;xeon&#34;</code></pre>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul>
-<li><a href="#xeon-a-matrix-based-dispersion-relation-solver-for-plasma-physics">XEON: A matriX-based dispErsion relAtion solver for plasma physics</a><ul>
-<li><a href="#dependencies">Dependencies</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#package-structure-and-usage">Package structure and usage</a></li>
-<li><a href="#references">References</a></li>
-</ul>
-</li>
-</ul>
+<ul></ul>
 </div>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
