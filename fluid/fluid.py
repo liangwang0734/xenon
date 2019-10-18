@@ -101,14 +101,14 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
         kxs (np.ndarray): An array of wavevector component along `x`.
         kzs (np.ndarray): An array of wavevector component along `z`.
         species (np.ndarray): A `nSpecies*nComponents` matrix. The components
-            are: `q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp`.
+            are: `q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para`.
             An example:
 
                 species = np.array([
-                    [q_e, m_e, n0_e, v0x_e, v0z_e, p0para_e, p0perp_e,
-                     gamma_para_e, gamma_perp_e],  # electron
-                    [q_i, m_i, n0_i, v0x_i, v0z_i, p0para_i, p0perp_i,
-                     gamma_para_i, gamma_perp_i],  # ion
+                    [q_e, m_e, n0_e, v0x_e, v0z_e, p0perp_e, p0para_e,
+                     gamma_perp_e, gamma_para_e],  # electron
+                    [q_i, m_i, n0_i, v0x_i, v0z_i, p0perp_i, p0para_i,
+                     gamma_perp_i, gamma_para_i],  # ion
                 ])
         params (dict): A dictionary with keys `Bz`, `epsilon0`.
         sort (str): `'real'` or `'imag'` or `'none'`. Order to sort results.
@@ -124,7 +124,7 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
     """
     NN, VX, VZ = range(3)
 
-    q, m, n, vx, vz, p_para, p_perp, gamma_para, gamma_perp = \
+    q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = \
             np.rollaxis(species, axis=1)
     B = params['Bz']
     epsilon0 = params['epsilon0']
@@ -214,14 +214,14 @@ def k2w_em3d(kxs, kzs, species, params, sort='real', eigenvector=False):
         kxs (np.ndarray): An array of wavevector component along `x`.
         kzs (np.ndarray): An array of wavevector component along `z`.
         species (np.ndarray): A `nSpecies*nComponents` matrix. The components
-            are: `q, m, n0, v0x, v0y, v0z, p0para, p0perp, gamma_para, gamma_perp`.
+            are: `q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para`.
             An example for plasma with isothermal electrons and adiabatic ions:  
 
                 species = np.array([
-                    [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0para_e, p0perp_e,
-                     gamma_para_e, gamma_perp_e],  # electron
-                    [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0para_i, p0perp_i,
-                     gamma_para_i, gamma_perp_i],  # ion
+                    [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0perp_e, p0para_e,
+                     gamma_perp_e, gamma_para_e],  # electron
+                    [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0perp_i, p0para_i,
+                     gamma_perp_i, gamma_para_i],  # ion
                 ])
 
         params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
@@ -239,7 +239,7 @@ def k2w_em3d(kxs, kzs, species, params, sort='real', eigenvector=False):
     NN, VX, VY, VZ = range(4)
     EX, EY, EZ, BX, BY, BZ = range(6)
 
-    q, m, n, vx, vy, vz, p_para, p_perp, gamma_para, gamma_perp = \
+    q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = \
             np.rollaxis(species, axis=1)
     B = params['Bz']
     c2 = params['c']**2  # light speed ^ 2
