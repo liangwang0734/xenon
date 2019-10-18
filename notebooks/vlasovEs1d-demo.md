@@ -1,4 +1,8 @@
 ```python
+"""
+DEMO: Bump-on-tail instability
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 plt.rcParams['axes.labelsize'] = 'xx-large'
@@ -7,7 +11,6 @@ import sys
 sys.path.append('/path/to/xeon')
 import xeon
 
-# DEMO: Bump-on-tail instability
 # parameters of each plasma species
 species = np.array([
     # q, m, n,   v,     p

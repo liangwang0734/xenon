@@ -1,12 +1,13 @@
 ```python
-# DEMO: Electron Bernstein's modes
+"""
+DEMO: Electron Bernstein's modes
+"""
 import matplotlib.pyplot as plt
 import numpy as np
 plt.rcParams['axes.labelsize'] = 'xx-large'
 
 import sys
 sys.path.append('/path/to/xeon')
-sys.path.append('/home/liang/src')
 import xeon
 
 import logging
