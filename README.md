@@ -38,7 +38,7 @@ For the complete API, see https://liangwang0734.github.io/xeon/
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
 
-#### Does xeon relies on other software to work?  
+#### Does xeon rely on other softwares to work?  
 - Modern [numpy](https://numpy.org/) and [scipy](https://www.scipy.org) are required for computation.
 - [matplotlib](https://matplotlib.org/) is required for using the visualization tool.
 
