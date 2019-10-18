@@ -1,5 +1,5 @@
 r"""
-## Dispersion relation solver for a kinetic plasmas.
+## Dispersion relation solvers for kinetic plasmas.
 
 Two versions are implemented:
 
