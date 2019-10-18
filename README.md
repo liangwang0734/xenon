@@ -25,11 +25,10 @@ xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 
 ##### How does it work?
 - The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
-  - The transformation of the Vlasov equations relies on the fact that the Z function of a bi-Maxwellian distribution can be written as a J-pole expansion (Padé approximation).
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - The algorithms are extended from [[1]] and [[2]]. If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
-##### How do I cite?
+##### How do I cite the code or collaborate?
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 - Please submit feature request and code discussion through the [Issues Page](https://github.com/liangwang0734/xeon/issues).
