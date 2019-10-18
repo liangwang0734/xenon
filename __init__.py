@@ -1,5 +1,5 @@
 """
-.. include:: ./README.md
+XEON: A matriX-based dispErsion relatiON solver for plasma physics
 """
 
 from . import fluid
