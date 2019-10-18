@@ -11,7 +11,6 @@ plt.rcParams['axes.labelsize'] = 'xx-large'
 
 import sys
 sys.path.append('/path/to/xeon')
-sys.path.append('/home/liang/src')
 import xeon
 
 # fundamental parameters

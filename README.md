@@ -3,7 +3,7 @@
 XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]]. 
 
 <img src="notebooks/images/bump-on-tail.png" align="right"
-     title="Bump-on-tail instability" width="280">
+     title="Bump-on-tail instability" width="300">
 For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
 ```python
 species = np.array([
@@ -20,6 +20,7 @@ ws = xeon.vlasov.k2w_es1d(ks, species, params)
 fig, axs = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
 xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 ```
+For more examples, refer to [`notebooks`](notebooks).  
 For the complete API, see https://liangwang0734.github.io/xeon/
 
 #### How does it work?
@@ -50,14 +51,14 @@ import xeon
 PyPI and Anaconda distributions will be used starting release 0.2.0.
 
 #### Package structure
-- [`fluid`](https://github.com/liangwang0734/xeon/tree/master/fluid): Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
-- [`vlasov`](https://github.com/liangwang0734/xeon/tree/master/vlasov): Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
-- [`common`](https://github.com/liangwang0734/xeon/tree/master/common): Coefficient generator, convenience tools for visulization, etc.
-- [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks): Demos compiled as Jupyter notebooks. This folder is being consolidated.
+- [`fluid`](fluid): Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
+- [`vlasov`](vlasov): Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
+- [`common`](common): Coefficient generator, convenience tools for visulization, etc.
+- [`notebooks`](notebooks): Demos compiled as Jupyter notebooks. This folder is being consolidated.
 
 #### Usage
 - For the complete API, see https://liangwang0734.github.io/xeon/
-- For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks), which will be consolidated.
+- For examples with both computation and visualization, refer to [`notebooks`](notebooks), which will be consolidated.
 
 #### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
