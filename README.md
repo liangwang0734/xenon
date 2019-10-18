@@ -1,13 +1,6 @@
 ### XEON: A matriX-based dispErsion relatiON solver for plasma physics
 
-XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3.
-
-##### How does it work?
-- The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
-  - The transformation of the Vlasov equations relies on the fact that the Z function of a bi-Maxwellian distribution can be written as a J-pole expansion (Padé approximation).
-- In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
-- The algorithms are extended from [[1]] and [[2]].
-- For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
+XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
 ```python
 species = np.array([
     # parameters of the background and beam electron species
@@ -16,20 +9,23 @@ species = np.array([
     [-1, 1, 0.1, 7.071, 0.1],
 ])
 params = dict(epsilon0=1)  # specify other parameters
-J = 8  # Order of Pade approximation
 
 ks = np.linspace(0.0001, 0.6, 50)  # an array of wavenumbers
 # for each wavenumber, compute the complex frequencies
-ws = xeon.vlasov.k2w_es1d(ks, species, params, J=J)
+ws = xeon.vlasov.k2w_es1d(ks, species, params)
 ```
+
+##### How does it work?
+- The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
+  - The transformation of the Vlasov equations relies on the fact that the Z function of a bi-Maxwellian distribution can be written as a J-pole expansion (Padé approximation).
+- In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
+- The algorithms are extended from [[1]] and [[2]]. If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
 ##### How do I cite?
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 - Please submit feature request and code discussion through the [Issues Page](https://github.com/liangwang0734/xeon/issues).
 - Any ideas of academic collaboration is welcome at **liang dot wang dot phys AT gmail.com**.
-
-If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
