@@ -23,15 +23,14 @@ import sys
 sys.path.append("/path/to/xeon/")
 import xeon
 ```
-The PyPI and Anaconda distribution will be used in the next release.
+PyPI and Anaconda distributions will be used starting release 0.2.0.
 
 ### Package structure and usage
 - [`fluid`](https://github.com/liangwang0734/xeon/tree/master/fluid): Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
 - [`vlasov`](https://github.com/liangwang0734/xeon/tree/master/vlasov): Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
 - [`common`](https://github.com/liangwang0734/xeon/tree/master/common): Coefficient generator, convenience tools for visulization, etc.
 - [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks): Demos compiled as Jupyter notebooks. This folder is being consolidated.
-
-
+---
 - For the complete API, see https://liangwang0734.github.io/xeon/
 - For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks).
 
