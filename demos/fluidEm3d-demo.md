@@ -1,4 +1,20 @@
 
+### Waves in a magnetized cold, overdense ($\omega_{pe}>\Omega_{ce}$) plasma
+#### Parallel propagation
+- Plasma oscillation
+- Electron cyclotron wave == Whistler wave; right-handed circularly polarized; Compressional Alfven wave
+- Ion cyclotron wave; left-handed circularly polarized; Shear Alfven wave
+- Two light waves of right- and left-handed circular polarizations, respectively, with cutoffs at $\omega_R$ and $\omega_L$.
+  - Their refractive indices are different $\Rightarrow$ Faraday rotation during propagation
+
+#### Perpendicular propagation
+
+#### Low-frequency limit
+- Shear or slow-Alfven wave, $\omega=\frac{kv_A\cos\theta}{\sqrt{1+v_A^2/c^2}}\approx k\cos\theta v_A=k_\parallel v_A$
+- Compressional or fast-Alfven wave $\omega=\frac{kv_A}{\sqrt{1+v_A^2/c^2}}\approx kv_A$
+- At $\theta=0$, the compressional and shear Alfven waves are indistiguishable.
+- The shear Alfven wave cannot propagate at $\theta=90^\circ$
+
 
 ```python
 """
@@ -12,29 +28,8 @@ plt.rcParams['axes.titlesize'] = 'xx-large'
 
 import sys
 sys.path.append('/path/to/xeon')
-sys.path.append('/home/liang/src')
 import xeon
-```
 
-### Magnetized cold overdense ($\omega_{pe}>\Omega_{ce}$) plasma
-#### Parallel propagation
-- Plasma oscillation
-- Electron cyclotron wave == Whistler wave; right-handed circularly polarized; Compressional Alfven wave
-- Ion cyclotron wave; left-handed circularly polarized; Shear Alfven wave
-- Two light waves of right- and left-handed circular polarizations, respectively, with cutoffs at $\omega_R$ and $\omega_L$.
-  - Their refractive indices are different $\Rightarrow$ Faraday rotation during propagation
-
-#### Perpendicular propagation
-
-#### Low-frequency limit
-- Shear or slow-Alfven wave, $\omega=\frac{kv_A\cos\theta}{\sqrt{1+v_A^2/c^2}}\approx k\cos\theta v_A=k_\parallel v_A$
-- Compressional or fast-Alfven wave $\omega=\frac{kv_A}{\sqrt{1+v_A^2/c^2}}\approx kv_A$
-
-- At $\theta=0$, the compressional and shear Alfven waves are indistiguishable.
-- The shear Alfven wave cannot propagate at $\theta=90^\circ$
-
-
-```python
 # magnetized plasma, angle between k and Bz0 from 0 to pi/2
 
 B0 = 0.8
