@@ -8,7 +8,7 @@ XEON is a collection of matrix-based plasma dispersion relation (DR) solvers wri
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - The algorithms are extended from [[1]] and [[2]].
 
-#### How do I cite?
+##### How do I cite?
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 - Please submit feature request and code discussion through the [Issues Page](https://github.com/liangwang0734/xeon/issues).
@@ -32,12 +32,13 @@ import xeon
 ```
 PyPI and Anaconda distributions will be used starting release 0.2.0.
 
-#### Package structure and usage
+#### Package structure
 - [`fluid`](https://github.com/liangwang0734/xeon/tree/master/fluid): Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
 - [`vlasov`](https://github.com/liangwang0734/xeon/tree/master/vlasov): Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
 - [`common`](https://github.com/liangwang0734/xeon/tree/master/common): Coefficient generator, convenience tools for visulization, etc.
 - [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks): Demos compiled as Jupyter notebooks. This folder is being consolidated.
----
+
+#### Using the code
 - For the complete API, see https://liangwang0734.github.io/xeon/
 - For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks).
 - For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
