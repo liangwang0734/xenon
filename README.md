@@ -23,6 +23,7 @@ import xeon
 - `fluid`: Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
 - `vlasov`: Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
 - `common`: Coefficient generator, convenience tools for visulization, etc.
+- `notebooks`: Demos compiled as Jupyter notebooks. This folder is being consolidated.
 
 For the API, see https://liangwang0734.github.io/xeon/
 
