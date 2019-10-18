@@ -1,4 +1,4 @@
-## XEON: A matriX-based dispErsion relAtion solver for plasma physics
+### XEON: A matriX-based dispErsion relAtion solver for plasma physics
 
 XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3.
 
@@ -18,11 +18,11 @@ If you prefer the Matlab flavor, please consider the original implementation, [B
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
 
-### Dependencies
+#### Dependencies
 - Modern [numpy](https://numpy.org/) and [scipy](https://www.scipy.org) are required for computation.
 - [matplotlib](https://matplotlib.org/) is required for using the visualization tool.
 
-### Installation
+#### Installation
 Currently, the package is in development stage and is provided only as is. One option to use the package is to make Python aware of its path:
 ```python
 import sys
@@ -31,7 +31,7 @@ import xeon
 ```
 PyPI and Anaconda distributions will be used starting release 0.2.0.
 
-### Package structure and usage
+#### Package structure and usage
 - [`fluid`](https://github.com/liangwang0734/xeon/tree/master/fluid): Multifluid dispersion relation solver supporting anisotropic pressure. ES1D, ES3D, and EM3D version are implemented.
 - [`vlasov`](https://github.com/liangwang0734/xeon/tree/master/vlasov): Vlasov dispersion relation solver for a warm plasma. ES1D and ES3D versions are implemented.
 - [`common`](https://github.com/liangwang0734/xeon/tree/master/common): Coefficient generator, convenience tools for visulization, etc.
@@ -41,6 +41,6 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 - For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks).
 
 
-### References
+#### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
 [[2]] Xie, Huasheng, and Xiao, Yong. "PDRK: A general kinetic dispersion relation solver for magnetized plasma." Plasma Science and Technology 18.2 (2016): 97.
