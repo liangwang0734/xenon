@@ -21,6 +21,7 @@ ws = xeon.vlasov.k2w_es1d(ks, species, params)
 fig, axs = plt.subplots(1, 2, figsize=(10, 5), sharex=True)
 xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 ```
+For the complete API, see https://liangwang0734.github.io/xeon/
 
 #### How does it work?
 - The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
