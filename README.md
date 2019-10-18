@@ -7,6 +7,21 @@ XEON is a collection of matrix-based plasma dispersion relation (DR) solvers wri
   - The transformation of the Vlasov equations relies on the fact that the Z function of a bi-Maxwellian distribution can be written as a J-pole expansion (Padé approximation).
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - The algorithms are extended from [[1]] and [[2]].
+- For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
+```python
+species = np.array([
+    # parameters of the background and beam electron species
+    # q, m, n,   v,     p
+    [-1, 1, 0.9, 0,     0.9],
+    [-1, 1, 0.1, 7.071, 0.1],
+])
+params = dict(epsilon0=1)  # specify other parameters
+J = 8  # Order of Pade approximation
+
+ks = np.linspace(0.0001, 0.6, 50)  # an array of wavenumbers
+# for each wavenumber, compute the complex frequencies
+ws = xeon.vlasov.k2w_es1d(ks, species, params, J=J)
+```
 
 ##### How do I cite?
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
@@ -14,7 +29,7 @@ XEON is a collection of matrix-based plasma dispersion relation (DR) solvers wri
 - Please submit feature request and code discussion through the [Issues Page](https://github.com/liangwang0734/xeon/issues).
 - Any ideas of academic collaboration is welcome at **liang dot wang dot phys AT gmail.com**.
 
-If you prefer the Matlab flavor, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
+If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
@@ -41,22 +56,6 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 #### Using the code
 - For the complete API, see https://liangwang0734.github.io/xeon/
 - For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks).
-- For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
-```python
-species = np.array([
-    # parameters of the background and beam electron species
-    # q, m, n,   v,     p
-    [-1, 1, 0.9, 0,     0.9],
-    [-1, 1, 0.1, 7.071, 0.1],
-])
-params = dict(epsilon0=1)  # specify other parameters
-J = 8  # Order of Pade approximation
-
-ks = np.linspace(0.0001, 0.6, 50)  # an array of wavenumbers
-# for each wavenumber, compute the complex frequencies
-ws = xeon.vlasov.k2w_es1d(ks, species, params, J=J)
-```
-
 
 #### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
