@@ -53,7 +53,7 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 - [`common`](https://github.com/liangwang0734/xeon/tree/master/common): Coefficient generator, convenience tools for visulization, etc.
 - [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks): Demos compiled as Jupyter notebooks. This folder is being consolidated.
 
-#### Using the code
+#### Usage
 - For the complete API, see https://liangwang0734.github.io/xeon/
 - For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks).
 
