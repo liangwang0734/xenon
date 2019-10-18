@@ -23,7 +23,7 @@ xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 For more examples, refer to [`demos`](demos).  
 For the complete API, see https://liangwang0734.github.io/xeon/
 
-#### How does it work?
+#### How does xeon work?
 - The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
@@ -38,11 +38,11 @@ For the complete API, see https://liangwang0734.github.io/xeon/
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
 
-#### Dependencies 
+#### Does xeon relies on other software to work?  
 - Modern [numpy](https://numpy.org/) and [scipy](https://www.scipy.org) are required for computation.
 - [matplotlib](https://matplotlib.org/) is required for using the visualization tool.
 
-#### Installation
+#### How do I load xeon?
 Currently, the package is in development stage and is provided only as is. One option to use the package is to make Python aware of its path:
 ```python
 import sys
@@ -51,13 +51,13 @@ import xeon
 ```
 PyPI and Anaconda distributions will be used starting release 0.2.0.
 
-#### Package structure
+#### What are the folders/files for?
 - [`fluid`](fluid): Multifluid dispersion relation solver supporting anisotropic pressure. `ES1D`, `ES3D`, and `EM3D` version are implemented.
 - [`vlasov`](vlasov): Vlasov dispersion relation solver for a warm plasma. `ES1D` and `ES3D` versions are implemented.
 - [`common`](common): Coefficient generator, convenience tools for visulization, etc.
 - [`demos`](demos): Demos compiled as markdown documents. This folder is being consolidated.
 
-#### Usage
+#### How do I use xeon?
 - For the complete API, see https://liangwang0734.github.io/xeon/
 - For examples with both computation and visualization, refer to [`demos`](demos), which will be consolidated.
 
