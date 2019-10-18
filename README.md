@@ -22,12 +22,12 @@ fig, axs = plt.subplots(1, 2, figsize=(10, 5), sharex=True)
 xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 ```
 
-##### How does it work?
+#### How does it work?
 - The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
-##### How do I cite the code or collaborate?
+#### How do I cite the code?
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 - Please submit feature request and code discussion through the [Issues Page](https://github.com/liangwang0734/xeon/issues).
@@ -36,7 +36,7 @@ xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
 
-#### Dependencies
+#### Dependencies 
 - Modern [numpy](https://numpy.org/) and [scipy](https://www.scipy.org) are required for computation.
 - [matplotlib](https://matplotlib.org/) is required for using the visualization tool.
 
@@ -57,7 +57,7 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 
 #### Usage
 - For the complete API, see https://liangwang0734.github.io/xeon/
-- For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks).
+- For examples with both computation and visualization, refer to [`notebooks`](https://github.com/liangwang0734/xeon/tree/master/notebooks), which will be consolidated.
 
 #### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
