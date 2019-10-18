@@ -13,12 +13,11 @@ species = np.array([
     [-1, 1, 0.1, 7.071, 0.1],  # beam electron
 ])
 params = dict(epsilon0=1)  # other parameters
-
 ks = np.linspace(0.0001, 0.6, 50)  # an array of wavenumbers
 # for each wavenumber, compute the complex frequencies
 ws = xeon.vlasov.k2w_es1d(ks, species, params)
 
-fig, axs = plt.subplots(1, 2, figsize=(10, 5), sharex=True)
+fig, axs = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
 xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 ```
 For the complete API, see https://liangwang0734.github.io/xeon/
