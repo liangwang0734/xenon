@@ -1,3 +1,5 @@
+
+
 ```python
 """
 DEMO: Bump-on-tail instability
@@ -52,6 +54,7 @@ axs[0].set_ylim(-0.5, 2)
 fig.tight_layout()
 plt.show()
 ```
+
 
 ![png](images/vlasovEs1d-demo-bump-on-tail.png)
 
