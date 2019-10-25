@@ -101,7 +101,7 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
         kxs (np.ndarray): An array of wavevector component along `x`.
         kzs (np.ndarray): An array of wavevector component along `z`.
         species (np.ndarray): A `nSpecies*nComponents` matrix. The components
-            are: `q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para`.
+            are: `q, m, n0, v0x, v0z, p0perp, p0para, gamma_perp, gamma_para`.
             An example:
 
                 species = np.array([
@@ -122,7 +122,7 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
             the eigenvalue `w[ik, is]` is the column `vr[ik, :, is]`. Only
             returned if ``eigenvector=True``.
     """
-    NN, VX, VZ = range(3)
+    NN, VX, VY, VZ = range(4)
 
     q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = \
             np.rollaxis(species, axis=1)
@@ -132,9 +132,10 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
     rho = n * m
     cs_para2 = gamma_para * p_para / rho
     cs_perp2 = gamma_perp * p_perp / rho
+    wc = q * B / m
 
     nSpecies = len(q)
-    nSolutions = 3 * nSpecies  # EM
+    nSolutions = 4 * nSpecies  # EM
     nk = len(kxs)
 
     M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
@@ -148,7 +149,7 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
         kz = kzs[ik]
         k2 = kx**2 + kz**2
         for j in range(nSpecies):
-            idx = j * 3  # first index of fluid variables, i.e., number density
+            idx = j * 4  # first index of fluid variables, i.e., number density
 
             # dn due to dn
             M[idx + NN, idx + NN] = -1j * (kx * vx[j] + kz * vz[j])
@@ -159,16 +160,21 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
 
             # dvi due to dvi
             M[idx + VX, idx + VX] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VY, idx + VY] = -1j * (kx * vx[j] + kz * vz[j])
             M[idx + VZ, idx + VZ] = -1j * (kx * vx[j] + kz * vz[j])
 
             # dvx due to dn (from dp, adiabatic EoS)
             M[idx + VX, idx + NN] = -1j * kx * cs_perp2[j] / n[j]
             # dvz due to dn (from dp, adiabatic EoS)
             M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
+            # dvx due to dvy (from vxB force)
+            M[idx + VX, idx + VY] += wc[j]
+            # dvy due to dvx (from vxB force)
+            M[idx + VY, idx + VX] -= wc[j]
 
             # dvx due to dn of all species (from phi or E, Gauss's law)
             for s in range(nSpecies):
-                idxs = s * 3
+                idxs = s * 4
                 M[idx + VX, idxs + NN] += (q[j] / m[j]) * q[s] \
                                         * (-1j * kx / k2 /epsilon0)
                 M[idx + VZ, idxs + NN] += (q[j] / m[j]) * q[s] \
