@@ -168,9 +168,9 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
             # dvz due to dn (from dp, adiabatic EoS)
             M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
             # dvx due to dvy (from vxB force)
-            M[idx + VX, idx + VY] += wc[j]
+            M[idx + VX, idx + VY] = wc[j]
             # dvy due to dvx (from vxB force)
-            M[idx + VY, idx + VX] -= wc[j]
+            M[idx + VY, idx + VX] = -wc[j]
 
             # dvx due to dn of all species (from phi or E, Gauss's law)
             for s in range(nSpecies):
@@ -294,9 +294,9 @@ def k2w_em3d(kxs, kzs, species, params, sort='real', eigenvector=False):
             # dvz due to dn (from dp, adiabatic EoS)
             M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
             # dvx due to dvy (from vxB force)
-            M[idx + VX, idx + VY] += wc[j]
+            M[idx + VX, idx + VY] = wc[j]
             # dvy due to dvx (from vxB force)
-            M[idx + VY, idx + VX] -= wc[j]
+            M[idx + VY, idx + VX] = -wc[j]
 
             # dvi due to dEi
             M[idx + VX, idxEM + EX] = q[j] / m[j]
