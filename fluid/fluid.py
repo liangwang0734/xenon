@@ -93,7 +93,7 @@ def k2w_es1d(kxs, species, params, sort='real', eigenvector=False):
         return ws
 
 
-def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
+def k2w_es3d(kxs, kzs, species, params, isMag=None, sort='real', eigenvector=False):
     """Compute dispersion relation for a 3d multifluid-Poisson system with
     background magnetic field along `z` and wavevector along `x` and `z`.
 
@@ -111,6 +111,8 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
                      gamma_perp_i, gamma_para_i],  # ion
                 ])
         params (dict): A dictionary with keys `Bz`, `epsilon0`.
+        isMag (list or None): A list of booleans to indicate wether each species
+            is magnetized. If not set, all species are assumed to be magnetized.
         sort (str): `'real'` or `'imag'` or `'none'`. Order to sort results.
         eigenvector (bool): Switch to return eigenvector in addition to
             eigenvalues (frequencies).
@@ -126,15 +128,20 @@ def k2w_es3d(kxs, kzs, species, params, sort='real', eigenvector=False):
 
     q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = \
             np.rollaxis(species, axis=1)
+    nSpecies = len(q)
     B = params['Bz']
     epsilon0 = params['epsilon0']
+    
+    if isMag is None:
+        isMag = [True] * nSpecies
+    assert (len(isMag) == nSpecies)
+    isMag = np.array(isMag, dtype=int)
 
     rho = n * m
     cs_para2 = gamma_para * p_para / rho
     cs_perp2 = gamma_perp * p_perp / rho
-    wc = q * B / m
+    wc = q * B / m * isMag
 
-    nSpecies = len(q)
     nSolutions = 4 * nSpecies  # EM
     nk = len(kxs)
 

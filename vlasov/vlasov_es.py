@@ -115,8 +115,8 @@ def k2w_es3d(
           `q, m, n, v0x, v0z, p0x, p0z`.
         params (dict): A dictionary of relevant parameters. Here, the used
           ones are `epsilon0` and `Bz`.
-        isMag (list or None): A list of booleans to indicate wether each species is
-            magnetized. If not set, all species are assumed to be magnetized.
+        isMag (list or None): A list of booleans to indicate wether each species
+            is magnetized. If not set, all species are assumed to be magnetized.
         J (int): Order of Pade approximation. One of (`8`, `12`).
         N (int): Highest order of cylctron harmonic to include in the Bessel
           expansion of the bi-Maxwellian distribution. If `check_convergence`
@@ -176,6 +176,7 @@ def k2w_es3d(
                                     kp_rc2m, Nmax, bessSum))
                 Ns[ik] = Nmax
     logging.debug("Ns {}".format(Ns))
+    print('Ns', Ns)
     if dry_run:
         return
 
