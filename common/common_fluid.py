@@ -218,3 +218,44 @@ def draw_extra_fluid(params, ax, ks=None, what=[], cost=None):
             ax.plot(ks, params.wpi / np.sqrt(1 + 1 / kLambdaD2), **line_kwargs)
         else:
             ax.plot((np.nan), (np.nan), **line_kwargs)
+
+
+def calc_wh(wpe, wpi, wce, wci):
+    w2_sum = 0.5 * (wpe**2 + wpi**2 + wce**2 + wci**2)
+    w2_perm = wpe**2 * wci**2 + wpi**2 * wce**2 + wce**2 * wci**2
+    wLH = np.sqrt(w2_sum - np.sqrt(w2_sum**2 - w2_perm))
+    wUH = np.sqrt(w2_sum + np.sqrt(w2_sum**2 - w2_perm))
+    return wLH, wUH
+
+
+def calc_wLH(wpe, wpi, wce, wci):
+    """Compute exact lower hybrid frequency for an electron-ion plasma.
+    """
+    wLH, wUH = calc_wh(wpe, wpi, wce, wci)
+    return wLH
+
+
+def calc_wUH(wpe, wpi, wce, wci):
+    """Compute exact upper hybrid frequency for an electron-ion plasma.
+    """
+    wLH, wUH = calc_wh(wpe, wpi, wce, wci)
+    return wUH
+
+
+def calc_wR(wpe, wpi, wce, wci):
+    """Compute exact cutoff frequencies left-handed circularly-polarized waves.
+
+    The wave is solution of L=0 in Stix's notations.
+    """
+    wce = abs(wce)
+    return 0.5 * (wce - wci) + np.sqrt((0.5 * (wce + wci))**2 + wp**2)
+
+
+def calc_wL(wpe, wpi, wce, wci):
+    """Compute exact cutoff frequencies right-handed circularly-polarized waves.
+
+    The wave is solution of R=0 in Stix's notations.
+    """
+    wce = abs(wce)
+    return 0.5 * (wci - wce) + np.sqrt((0.5 * (wce + wci))**2 + wp**2)
+
