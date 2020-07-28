@@ -1,4 +1,5 @@
 ### XEON: A matriX-based dispErsion relatiON solver for plasma physics
+[![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 
 XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
 
@@ -28,10 +29,8 @@ For the complete API, see https://liangwang0734.github.io/xeon/
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
-#### How do I become a user?
+#### What is the license?
 - Xeon is under MIT licence with maximum freedom to use.
-- Please submit bug fixes, improvements, feature request and other code discussions to the [Issues Page](https://github.com/liangwang0734/xeon/issues). Pull requests are welcome.
-- For other issues/discussions, contact liang.wang.phys<img src="demos/images/gm.png" width="10%">.
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 
