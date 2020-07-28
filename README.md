@@ -1,11 +1,11 @@
 ### XENON: A matriX-based dispErsioN relatiON solver for plasma physics
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3497597.svg)](https://doi.org/10.5281/zenodo.3497597)
 
-XENON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
+XENON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. Currently, electrostatic/electromagnetic multifluid plasmas, and electrostatic kinetic plasmas are supported. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
 
 <img src="demos/images/bump-on-tail.png" align="right"
      title="Bump-on-tail instability" width="300">
-For a quick taste of the flavor, following is a snippet to compute the DR for the Bump-on-tail instability:
+For a quick taste, following is a snippet to compute the DR for the Bump-on-tail instability:
 ```python
 species = np.array([
     # parameters of each species
@@ -56,9 +56,9 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 - [`common`](common): Coefficient generator, convenience tools for visulization, etc.
 - [`demos`](demos): Demos compiled as markdown documents. This folder is being consolidated.
 
-#### How do I use xenon?
+#### How do I use xenon like an expert?
 - For the complete API, see https://liangwang0734.github.io/xenon/
-- For examples with both computation and visualization, refer to [`demos`](demos), which will be consolidated.
+- For examples with both computation and visualization, refer to [`demos`](demos), which will be consolidated in the future.
 
 #### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
