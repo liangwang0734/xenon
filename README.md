@@ -1,5 +1,5 @@
 ### XENON: A matriX-based dispErsioN relatiON solver for plasma physics
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3964454.svg)](https://doi.org/10.5281/zenodo.3497597)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3497597.svg)](https://doi.org/10.5281/zenodo.3497597)
 
 XENON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
 
