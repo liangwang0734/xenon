@@ -1,7 +1,7 @@
-### XEON: A matriX-based dispErsion relatiON solver for plasma physics
+### XENON: A matriX-based dispErsion relatiON solver for plasma physics
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 
-XEON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
+XENON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
 
 <img src="demos/images/bump-on-tail.png" align="right"
      title="Bump-on-tail instability" width="300">
@@ -16,37 +16,37 @@ species = np.array([
 params = dict(epsilon0=1)  # other parameters
 ks = np.linspace(0.0001, 0.6, 50)  # an array of wavenumbers
 # for each wavenumber, compute the complex frequencies
-ws = xeon.vlasov.k2w_es1d(ks, species, params)
+ws = xenon.vlasov.k2w_es1d(ks, species, params)
 
 fig, axs = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
-xeon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
+xenon.common.plot_dr(ks, ws, ax0=axs[0], ax1=axs[1])
 ```
 For more examples, refer to [`demos`](demos).  
-For the complete API, see https://liangwang0734.github.io/xeon/
+For the complete API, see https://liangwang0734.github.io/xenon/
 
-#### How does xeon work?
+#### How does xenon work?
 - The linearized fluid or Vlasov equations are transformed into a matrix form, and complex frequencies `[w1, w2, w3, ...]` are computed as eigenvalues of this coefficient matrix for each wavenumber `k`.
 - In this matrix-based method, no initial guess is necessary, and all solutions, including eigenvectors, are captured.
 - If you prefer Matlab over Python, please consider the original implementation, [BO](https://github.com/hsxie/pdrk), by Dr. Huasheng Xie.
 
 #### What is the license?
-- Xeon is under MIT licence with maximum freedom to use.
+- Xenon is under MIT licence with maximum freedom to use.
 - Please cite the code at https://doi.org/10.5281/zenodo.3497597 or  
 [![DOI](https://zenodo.org/badge/215848704.svg)](https://zenodo.org/badge/latestdoi/215848704)
 
 [1]:https://www.sciencedirect.com/science/article/pii/S0010465513003408
 [2]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
 
-#### Does xeon rely on other softwares to work?  
+#### Does xenon rely on other softwares to work?  
 - Modern [numpy](https://numpy.org/) and [scipy](https://www.scipy.org) are required for computation.
 - [matplotlib](https://matplotlib.org/) is required for using the visualization tool.
 
-#### How do I load xeon?
+#### How do I load xenon?
 Currently, the package is in development stage and is provided only as is. One option to use the package is to make Python aware of its path:
 ```python
 import sys
-sys.path.append("/path/to/xeon/")
-import xeon
+sys.path.append("/path/to/xenon/")
+import xenon
 ```
 PyPI and Anaconda distributions will be used starting release 0.2.0.
 
@@ -56,8 +56,8 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 - [`common`](common): Coefficient generator, convenience tools for visulization, etc.
 - [`demos`](demos): Demos compiled as markdown documents. This folder is being consolidated.
 
-#### How do I use xeon?
-- For the complete API, see https://liangwang0734.github.io/xeon/
+#### How do I use xenon?
+- For the complete API, see https://liangwang0734.github.io/xenon/
 - For examples with both computation and visualization, refer to [`demos`](demos), which will be consolidated.
 
 #### References

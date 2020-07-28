@@ -10,8 +10,8 @@ import numpy as np
 plt.rcParams['axes.labelsize'] = 'xx-large'
 
 import sys
-sys.path.append('/path/to/xeon')
-import xeon
+sys.path.append('/path/to/xenon')
+import xenon
 
 # fundamental parameters
 eps0 = 1.
@@ -66,7 +66,7 @@ J = 8  # order of Pade approximation
 N = 13  # number of bessel function terms to include
 
 # solve for dr
-ws_es3d = xeon.vlasov.k2w_es3d(kxs, kzs, species, params, isMag, J=J, N=N)
+ws_es3d = xenon.vlasov.k2w_es3d(kxs, kzs, species, params, isMag, J=J, N=N)
 
 # plot dr
 pargs = dict(
@@ -74,7 +74,7 @@ pargs = dict(
     alpha=0.5,
 )
 fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(8, 4), sharex=True)
-xeon.common.plot_dr(ks,
+xenon.common.plot_dr(ks,
                     ws_es3d,
                     wnorm=w0,
                     knorm=k0,

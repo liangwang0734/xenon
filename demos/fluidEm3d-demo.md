@@ -27,8 +27,8 @@ plt.rcParams['axes.labelsize'] = 'xx-large'
 plt.rcParams['axes.titlesize'] = 'xx-large'
 
 import sys
-sys.path.append('/path/to/xeon')
-import xeon
+sys.path.append('/path/to/xenon')
+import xenon
 
 # magnetized plasma, angle between k and Bz0 from 0 to pi/2
 
@@ -49,7 +49,7 @@ params = dict(
     c=1.,
     epsilon0=1.,
 )
-dr_params = xeon.common.fluid_params(species=species, params=params)
+dr_params = xenon.common.fluid_params(species=species, params=params)
 
 ks = np.linspace(0, 4, 36)
 # theta is angle between k and B0, i.e., z axis
@@ -61,16 +61,16 @@ for itheta, theta in enumerate(thetas):
     kxs = ks * np.sin(theta)
     kzs = ks * np.cos(theta)
     ax0 = axs[itheta]
-    ws = xeon.fluid.k2w_em3d(kxs, kzs, species=species, params=params)
+    ws = xenon.fluid.k2w_em3d(kxs, kzs, species=species, params=params)
     
     # draw DR
-    xeon.common.plot_dr(ks, ws, ax0=ax0)
+    xenon.common.plot_dr(ks, ws, ax0=ax0)
     ax0.set_ylim(-0.25, 2)
     title = r'$\theta={:.0f}^\circ$'.format(thetas_deg[itheta])
     ax0.set_title(title, va='bottom', y=1)
 
     # draw various characteristic curves to explain the physics 
-    xeon.common.draw_extra_fluid(
+    xenon.common.draw_extra_fluid(
         dr_params, ax0, ks,
         ['vAlf', 'vAlf*cost', 'wp', 'wUH', 'wLH', 'wL', 'wR', 'wce', 'wci'],
         np.cos(theta))

@@ -10,8 +10,8 @@ import numpy as np
 plt.rcParams['axes.labelsize'] = 'xx-large'
 
 import sys
-sys.path.append('/path/to/xeon')
-import xeon
+sys.path.append('/path/to/xenon')
+import xenon
 
 # parameters of each plasma species
 species = np.array([
@@ -23,13 +23,13 @@ params = dict(epsilon0=1)  # other parameters
 J = 8  # order of Pade approximation
 ks = np.linspace(0.0001, 0.6, 50)  # an array of wavenumbers
 # for each wavenumber, compute the complex frequencies
-ws = xeon.vlasov.k2w_es1d(ks, species, params, J=J, sort='imag')
+ws = xenon.vlasov.k2w_es1d(ks, species, params, J=J, sort='imag')
 
 # plot the dispersion relations and sort the results by the
 # imaginary parts, i.e., by the growth rates
 fig, axs = plt.subplots(1, 2, figsize=(10, 4), sharex=True)
 # plot all modes but the fastest growing mode
-xeon.common.plot_dr(
+xenon.common.plot_dr(
     ks,
     ws[:, :-1],
     ax0=axs[0],
@@ -38,7 +38,7 @@ xeon.common.plot_dr(
     pargs1=dict(c='steelblue', s=10),
 )
 # plot the fastest growing mode
-xeon.common.plot_dr(
+xenon.common.plot_dr(
     ks,
     ws[:, -1:],
     ax0=axs[0],
