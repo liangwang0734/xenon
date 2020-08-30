@@ -40,7 +40,7 @@ For the complete API, see https://liangwang0734.github.io/xenon/
 Currently, the package is in development stage and is provided only as is. One option to use the package is to make Python aware of its path:
 ```python
 import sys
-sys.path.append("/path/to/xenon/")
+sys.path.append("/path/to/parent/folder/of/xenon/")
 import xenon
 ```
 PyPI and Anaconda distributions will be used starting release 0.2.0.
