@@ -26,8 +26,15 @@ class fluid_params():
                     ])
             params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
         """
-        q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
-            species, axis=1)
+        if species.shape[1] == 10:
+            q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
+                species, axis=1)
+        elif species.shape[1] == 9:
+            q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
+                species, axis=1)
+            vy = 0
+        else:
+            raise ValueError('`species` must have 9 (es) or 10 (em) components.')
         nSpecies = len(q)
 
         B = params['Bz']
