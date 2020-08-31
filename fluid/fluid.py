@@ -23,11 +23,11 @@ def k2w_es1d(kxs, species, params, sort='real', eigenvector=False):
             eigenvalues (frequencies).
 
     Returns:
-        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`'th
-            `kx` value.
-        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
-            corresponding to the eigenvalue `w[ik, is]` is the column
-            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`'th
+            `(kx, kz)` value.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     """
     NN, VX = range(2)
 
@@ -118,11 +118,11 @@ def k2w_es3d(kxs, kzs, species, params, isMag=None, sort='real', eigenvector=Fal
             eigenvalues (frequencies).
 
     Returns:
-        ws: `ws[ik, :]` is the maginary frequency for the `ik`'th `(kx, kz)`
-            value.
-        vrs: `vrs[ik, ...]` is the normalized right eigenvector corresponding to
-            the eigenvalue `w[ik, is]` is the column `vr[ik, :, is]`. Only
-            returned if ``eigenvector=True``.
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`'th
+            `(kx, kz)` value.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     """
     NN, VX, VY, VZ = range(4)
 
@@ -243,11 +243,11 @@ def k2w_em3d(kxs, kzs, species, params, sort='real', eigenvector=False):
             eigenvalues (frequencies).
 
     Returns:
-        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`'th
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`'th
             `(kx, kz)` value.
-        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
-            corresponding to the eigenvalue `w[ik, is]` is the column
-            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     """
     NN, VX, VY, VZ = range(4)
     EX, EY, EZ, BX, BY, BZ = range(6)
