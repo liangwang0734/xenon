@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 class fluid_params():
     """A class to compute useful variables from basic parameters for repeated
     usage."""
-    def __init__(self, species, params):
+    def __init__(self, species, params, problem_type=None):
         """
         Args:
             species (np.ndarray): A `nSpecies*nComponents` matrix. The components
@@ -29,25 +29,41 @@ class fluid_params():
         if species.shape[1] == 10:  # em3d
             q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
                 species, axis=1)
+            if problem_type is None:
+                problem_type = 'em3d'
+            else:
+                assert problem_type == 'em3d'
         elif species.shape[1] == 9:  # es3d
             q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
                 species, axis=1)
             vy = 0
+            if problem_type is None:
+                problem_type = 'es3d'
+            else:
+                assert problem_type == 'es3d'
         elif species.shape[1] == 6:  # es1d
-            q, m, n, vx, p, gamma = np.rollaxis(
-                species, axis=1)
+            q, m, n, vx, p, gamma = np.rollaxis(species, axis=1)
             vy = 0
             vz = 0
             p_perp = p
             p_para = p
             gamma_perp = gamma
             gamma_para = gamma
+            if problem_type is None:
+                problem_type = 'es1d'
+            else:
+                assert problem_type == 'es1d'
         else:
-            raise ValueError('`species` must have 9 (es) or 10 (em) components.')
+            raise ValueError(
+                    '`species` must have 6 (es1d), 9 (es3d) or 10 '
+                    '(em3d) components.')
         nSpecies = len(q)
 
-        B = params['Bz']
-        c = params['c'] # light speed
+        B, c = 0, 1
+        if problem_type in ['es3d', 'em3d']:
+            B = params['Bz']
+        if problem_type in ['em3d']:
+            c = params['c']
         epsilon0 = params['epsilon0']
 
         c2 = c**2
