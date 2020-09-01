@@ -26,13 +26,22 @@ class fluid_params():
                     ])
             params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
         """
-        if species.shape[1] == 10:
+        if species.shape[1] == 10:  # em3d
             q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
                 species, axis=1)
-        elif species.shape[1] == 9:
+        elif species.shape[1] == 9:  # es3d
             q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
                 species, axis=1)
             vy = 0
+        elif species.shape[1] == 6:  # es1d
+            q, m, n, vx, p, gamma = np.rollaxis(
+                species, axis=1)
+            vy = 0
+            vz = 0
+            p_perp = p
+            p_para = p
+            gamma_perp = gamma
+            gamma_para = gamma
         else:
             raise ValueError('`species` must have 9 (es) or 10 (em) components.')
         nSpecies = len(q)
@@ -49,7 +58,10 @@ class fluid_params():
         cs = np.sqrt(gamma_para * p_para / n / m)  # sound speeds
         rho_m = (n * m).sum()
         vAlf = np.sqrt(B**2 / mu0 / (m * n))
-        vAlf_tot = np.sqrt(1 / (1 / vAlf**2).sum())
+        if abs(B) > 0:
+            vAlf_tot = np.sqrt(1 / (1 / vAlf**2).sum())
+        else:
+            vAlf_tot = 0
         vAlf2 = vAlf_tot**2
         # magnetosonic speed
         if (np.abs(B) > np.finfo(np.float64).eps * 1e3):
