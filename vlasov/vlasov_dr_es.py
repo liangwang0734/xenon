@@ -3,7 +3,7 @@ __all__ = ['k2w_es1d', 'k2w_es3d']
 import numpy as np
 import scipy.linalg
 from scipy.special import ive
-from .common_vlasov import bzs, czs
+from .vlasov_utils import bzs, czs
 import logging
 
 

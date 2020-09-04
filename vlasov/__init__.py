@@ -6,5 +6,5 @@ Two versions are implemented:
 - `k2w_es1d`: Electrostatic waves in an unmagnetized plasma.
 - `kw2_es3d`: Electrostatic waves in a magnetized plasma.
 """
-from .common_vlasov import *
-from .vlasov_es import *
+from .vlasov_utils import *
+from .vlasov_dr_es import *
