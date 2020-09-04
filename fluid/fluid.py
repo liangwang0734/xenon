@@ -6,6 +6,9 @@ import scipy.linalg
 
 def k2w_es1d(kxs, species, params, sort='real', eigenvector=False):
     """Compute dispersion relation for a 1d multifluid-Poisson system.
+    
+    This function perhaps is simple enough to be incorporated into
+    `k2w_es3d` and is implemented here to demonstrate the basic algorithm.
 
     Args:
         kxs (np.ndarray): An array of wavevector component values along `x`.
