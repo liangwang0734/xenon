@@ -3,6 +3,8 @@
 
 XENON is a collection of matrix-based plasma dispersion relation (DR) solvers written in Python 3. Currently, electrostatic/electromagnetic multifluid plasmas, and electrostatic kinetic plasmas are supported. The algorithms are extended from [[1]] and [[2]] pioneered by Dr. Huasheng Xie. 
 
+The motivation of this work is to facilitate multifluid and Vlasov simulations using the [Gkeyll v2 code](https://github.com/ammarhakim/gkyl).
+
 <img src="demos/images/bump-on-tail.png" align="right"
      title="Bump-on-tail instability" width="300">
 For a quick taste, following is a snippet to compute the DR for the Bump-on-tail instability:
@@ -58,3 +60,6 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 #### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
 [[2]] Xie, Huasheng, and Xiao, Yong. "PDRK: A general kinetic dispersion relation solver for magnetized plasma." Plasma Science and Technology 18.2 (2016): 97.
+
+#### Funding support
+- Air Force Office of Scientific Research Grant No. FA9550-15-1-0193.
