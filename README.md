@@ -58,3 +58,6 @@ PyPI and Anaconda distributions will be used starting release 0.2.0.
 #### References
 [[1]] Xie, Hua-sheng. "PDRF: A general dispersion relation solver for magnetized multi-fluid plasma." Computer Physics Communications 185.2 (2014): 670-675.  
 [[2]] Xie, Huasheng, and Xiao, Yong. "PDRK: A general kinetic dispersion relation solver for magnetized plasma." Plasma Science and Technology 18.2 (2016): 97.
+
+#### Funding support
+- Air Force Office of Scientific Research Grant No. FA9550-15-1-0193
