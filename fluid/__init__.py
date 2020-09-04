@@ -16,4 +16,5 @@ Further extension planned (in order of priority from high to low):
 - Density/temperature gradients
 - Collisions
 """
+from .common_fluid import *
 from .fluid import *
