@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.1" />
-<title>xenon.fluid.fluid API documentation</title>
+<title>xenon.fluid.fluid_dr API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>xenon.fluid.fluid</code></h1>
+<h1 class="title">Module <code>xenon.fluid.fluid_dr</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -32,6 +32,9 @@ import scipy.linalg
 
 def k2w_es1d(kxs, species, params, sort=&#39;real&#39;, eigenvector=False):
     &#34;&#34;&#34;Compute dispersion relation for a 1d multifluid-Poisson system.
+    
+    This function perhaps is simple enough to be incorporated into
+    `k2w_es3d` and is implemented here to demonstrate the basic algorithm.
 
     Args:
         kxs (np.ndarray): An array of wavevector component values along `x`.
@@ -49,11 +52,11 @@ def k2w_es1d(kxs, species, params, sort=&#39;real&#39;, eigenvector=False):
             eigenvalues (frequencies).
 
     Returns:
-        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
-            `kx` value.
-        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
-            corresponding to the eigenvalue `w[ik, is]` is the column
-            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`&#39;th
+            `(kx, kz)` value.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     &#34;&#34;&#34;
     NN, VX = range(2)
 
@@ -119,7 +122,7 @@ def k2w_es1d(kxs, species, params, sort=&#39;real&#39;, eigenvector=False):
         return ws
 
 
-def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
+def k2w_es3d(kxs, kzs, species, params, isMag=None, sort=&#39;real&#39;, eigenvector=False):
     &#34;&#34;&#34;Compute dispersion relation for a 3d multifluid-Poisson system with
     background magnetic field along `z` and wavevector along `x` and `z`.
 
@@ -127,7 +130,7 @@ def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
         kxs (np.ndarray): An array of wavevector component along `x`.
         kzs (np.ndarray): An array of wavevector component along `z`.
         species (np.ndarray): A `nSpecies*nComponents` matrix. The components
-            are: `q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para`.
+            are: `q, m, n0, v0x, v0z, p0perp, p0para, gamma_perp, gamma_para`.
             An example:
 
                 species = np.array([
@@ -137,30 +140,38 @@ def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
                      gamma_perp_i, gamma_para_i],  # ion
                 ])
         params (dict): A dictionary with keys `Bz`, `epsilon0`.
+        isMag (list or None): A list of booleans to indicate wether each species
+            is magnetized. If not set, all species are assumed to be magnetized.
         sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
         eigenvector (bool): Switch to return eigenvector in addition to
             eigenvalues (frequencies).
 
     Returns:
-        ws: `ws[ik, :]` is the maginary frequency for the `ik`&#39;th `(kx, kz)`
-            value.
-        vrs: `vrs[ik, ...]` is the normalized right eigenvector corresponding to
-            the eigenvalue `w[ik, is]` is the column `vr[ik, :, is]`. Only
-            returned if ``eigenvector=True``.
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`&#39;th
+            `(kx, kz)` value.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     &#34;&#34;&#34;
-    NN, VX, VZ = range(3)
+    NN, VX, VY, VZ = range(4)
 
     q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = \
             np.rollaxis(species, axis=1)
+    nSpecies = len(q)
     B = params[&#39;Bz&#39;]
     epsilon0 = params[&#39;epsilon0&#39;]
+    
+    if isMag is None:
+        isMag = [True] * nSpecies
+    assert (len(isMag) == nSpecies)
+    isMag = np.array(isMag, dtype=int)
 
     rho = n * m
     cs_para2 = gamma_para * p_para / rho
     cs_perp2 = gamma_perp * p_perp / rho
+    wc = q * B / m * isMag
 
-    nSpecies = len(q)
-    nSolutions = 3 * nSpecies  # EM
+    nSolutions = 4 * nSpecies  # EM
     nk = len(kxs)
 
     M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
@@ -174,7 +185,7 @@ def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
         kz = kzs[ik]
         k2 = kx**2 + kz**2
         for j in range(nSpecies):
-            idx = j * 3  # first index of fluid variables, i.e., number density
+            idx = j * 4  # first index of fluid variables, i.e., number density
 
             # dn due to dn
             M[idx + NN, idx + NN] = -1j * (kx * vx[j] + kz * vz[j])
@@ -185,16 +196,21 @@ def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
 
             # dvi due to dvi
             M[idx + VX, idx + VX] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VY, idx + VY] = -1j * (kx * vx[j] + kz * vz[j])
             M[idx + VZ, idx + VZ] = -1j * (kx * vx[j] + kz * vz[j])
 
             # dvx due to dn (from dp, adiabatic EoS)
             M[idx + VX, idx + NN] = -1j * kx * cs_perp2[j] / n[j]
             # dvz due to dn (from dp, adiabatic EoS)
             M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
+            # dvx due to dvy (from vxB force)
+            M[idx + VX, idx + VY] = wc[j]
+            # dvy due to dvx (from vxB force)
+            M[idx + VY, idx + VX] = -wc[j]
 
             # dvx due to dn of all species (from phi or E, Gauss&#39;s law)
             for s in range(nSpecies):
-                idxs = s * 3
+                idxs = s * 4
                 M[idx + VX, idxs + NN] += (q[j] / m[j]) * q[s] \
                                         * (-1j * kx / k2 /epsilon0)
                 M[idx + VZ, idxs + NN] += (q[j] / m[j]) * q[s] \
@@ -256,11 +272,11 @@ def k2w_em3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
             eigenvalues (frequencies).
 
     Returns:
-        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`&#39;th
             `(kx, kz)` value.
-        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
-            corresponding to the eigenvalue `w[ik, is]` is the column
-            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     &#34;&#34;&#34;
     NN, VX, VY, VZ = range(4)
     EX, EY, EZ, BX, BY, BZ = range(6)
@@ -314,9 +330,9 @@ def k2w_em3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
             # dvz due to dn (from dp, adiabatic EoS)
             M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
             # dvx due to dvy (from vxB force)
-            M[idx + VX, idx + VY] += wc[j]
+            M[idx + VX, idx + VY] = wc[j]
             # dvy due to dvx (from vxB force)
-            M[idx + VY, idx + VX] -= wc[j]
+            M[idx + VY, idx + VX] = -wc[j]
 
             # dvi due to dEi
             M[idx + VX, idxEM + EX] = q[j] / m[j]
@@ -391,7 +407,7 @@ def k2w_em3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="xenon.fluid.fluid.k2w_em3d"><code class="name flex">
+<dt id="xenon.fluid.fluid_dr.k2w_em3d"><code class="name flex">
 <span>def <span class="ident">k2w_em3d</span></span>(<span>kxs, kzs, species, params, sort='real', eigenvector=False)</span>
 </code></dt>
 <dd>
@@ -430,13 +446,13 @@ eigenvalues (frequencies).</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><strong><code>ws</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd><code>ws[ik, :]</code> is the maginary frequency for the <code>ik</code>'th
+<dt><strong><code>ws</code></strong></dt>
+<dd><code>ws[ik, :]</code> contains imaginary frequencies for the <code>ik</code>'th
 <code>(kx, kz)</code> value.</dd>
-<dt><strong><code>vrs</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd><code>vrs[ik, ...]</code> is the normalized right eigenvector
-corresponding to the eigenvalue <code>w[ik, is]</code> is the column
-<code>vr[ik, :, is]</code>. Only returned if <code>eigenvector=True</code>.</dd>
+<dt><strong><code>vrs</code></strong></dt>
+<dd><code>vrs[ik, :, iw]</code> is the normalized right eigenvector
+corresponding to the eigenvalue <code>ws[ik, iw]</code>. Only returned if
+<code>eigenvector=True</code>.</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -473,11 +489,11 @@ corresponding to the eigenvalue <code>w[ik, is]</code> is the column
             eigenvalues (frequencies).
 
     Returns:
-        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`&#39;th
             `(kx, kz)` value.
-        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
-            corresponding to the eigenvalue `w[ik, is]` is the column
-            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     &#34;&#34;&#34;
     NN, VX, VY, VZ = range(4)
     EX, EY, EZ, BX, BY, BZ = range(6)
@@ -531,9 +547,9 @@ corresponding to the eigenvalue <code>w[ik, is]</code> is the column
             # dvz due to dn (from dp, adiabatic EoS)
             M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
             # dvx due to dvy (from vxB force)
-            M[idx + VX, idx + VY] += wc[j]
+            M[idx + VX, idx + VY] = wc[j]
             # dvy due to dvx (from vxB force)
-            M[idx + VY, idx + VX] -= wc[j]
+            M[idx + VY, idx + VX] = -wc[j]
 
             # dvi due to dEi
             M[idx + VX, idxEM + EX] = q[j] / m[j]
@@ -601,11 +617,13 @@ corresponding to the eigenvalue <code>w[ik, is]</code> is the column
         return ws</code></pre>
 </details>
 </dd>
-<dt id="xenon.fluid.fluid.k2w_es1d"><code class="name flex">
+<dt id="xenon.fluid.fluid_dr.k2w_es1d"><code class="name flex">
 <span>def <span class="ident">k2w_es1d</span></span>(<span>kxs, species, params, sort='real', eigenvector=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Compute dispersion relation for a 1d multifluid-Poisson system.</p>
+<p>This function perhaps is simple enough to be incorporated into
+<a title="xenon.fluid.fluid_dr.k2w_es3d" href="#xenon.fluid.fluid_dr.k2w_es3d"><code>k2w_es3d()</code></a> and is implemented here to demonstrate the basic algorithm.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>kxs</code></strong> :&ensp;<code>np.ndarray</code></dt>
@@ -628,13 +646,13 @@ eigenvalues (frequencies).</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><strong><code>ws</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd><code>ws[ik, :]</code> is the maginary frequency for the <code>ik</code>'th
-<code>kx</code> value.</dd>
-<dt><strong><code>vrs</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd><code>vrs[ik, ...]</code> is the normalized right eigenvector
-corresponding to the eigenvalue <code>w[ik, is]</code> is the column
-<code>vr[ik, :, is]</code>. Only returned if <code>eigenvector=True</code>.</dd>
+<dt><strong><code>ws</code></strong></dt>
+<dd><code>ws[ik, :]</code> contains imaginary frequencies for the <code>ik</code>'th
+<code>(kx, kz)</code> value.</dd>
+<dt><strong><code>vrs</code></strong></dt>
+<dd><code>vrs[ik, :, iw]</code> is the normalized right eigenvector
+corresponding to the eigenvalue <code>ws[ik, iw]</code>. Only returned if
+<code>eigenvector=True</code>.</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -642,6 +660,9 @@ corresponding to the eigenvalue <code>w[ik, is]</code> is the column
 </summary>
 <pre><code class="python">def k2w_es1d(kxs, species, params, sort=&#39;real&#39;, eigenvector=False):
     &#34;&#34;&#34;Compute dispersion relation for a 1d multifluid-Poisson system.
+    
+    This function perhaps is simple enough to be incorporated into
+    `k2w_es3d` and is implemented here to demonstrate the basic algorithm.
 
     Args:
         kxs (np.ndarray): An array of wavevector component values along `x`.
@@ -659,11 +680,11 @@ corresponding to the eigenvalue <code>w[ik, is]</code> is the column
             eigenvalues (frequencies).
 
     Returns:
-        ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`&#39;th
-            `kx` value.
-        vrs (np.ndarray): `vrs[ik, ...]` is the normalized right eigenvector
-            corresponding to the eigenvalue `w[ik, is]` is the column
-            `vr[ik, :, is]`. Only returned if `eigenvector=True`.
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`&#39;th
+            `(kx, kz)` value.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     &#34;&#34;&#34;
     NN, VX = range(2)
 
@@ -729,8 +750,8 @@ corresponding to the eigenvalue <code>w[ik, is]</code> is the column
         return ws</code></pre>
 </details>
 </dd>
-<dt id="xenon.fluid.fluid.k2w_es3d"><code class="name flex">
-<span>def <span class="ident">k2w_es3d</span></span>(<span>kxs, kzs, species, params, sort='real', eigenvector=False)</span>
+<dt id="xenon.fluid.fluid_dr.k2w_es3d"><code class="name flex">
+<span>def <span class="ident">k2w_es3d</span></span>(<span>kxs, kzs, species, params, isMag=None, sort='real', eigenvector=False)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Compute dispersion relation for a 3d multifluid-Poisson system with
@@ -743,7 +764,7 @@ background magnetic field along <code>z</code> and wavevector along <code>x</cod
 <dd>An array of wavevector component along <code>z</code>.</dd>
 <dt><strong><code>species</code></strong> :&ensp;<code>np.ndarray</code></dt>
 <dd>A <code>nSpecies*nComponents</code> matrix. The components
-are: <code>q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para</code>.
+are: <code>q, m, n0, v0x, v0z, p0perp, p0para, gamma_perp, gamma_para</code>.
 An example:<pre><code>species = np.array([
     [q_e, m_e, n0_e, v0x_e, v0z_e, p0perp_e, p0para_e,
      gamma_perp_e, gamma_para_e],  # electron
@@ -754,6 +775,9 @@ An example:<pre><code>species = np.array([
 </dd>
 <dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
 <dd>A dictionary with keys <code>Bz</code>, <code>epsilon0</code>.</dd>
+<dt><strong><code>isMag</code></strong> :&ensp;<code>list</code> or <code>None</code></dt>
+<dd>A list of booleans to indicate wether each species
+is magnetized. If not set, all species are assumed to be magnetized.</dd>
 <dt><strong><code>sort</code></strong> :&ensp;<code>str</code></dt>
 <dd><code>'real'</code> or <code>'imag'</code> or <code>'none'</code>. Order to sort results.</dd>
 <dt><strong><code>eigenvector</code></strong> :&ensp;<code>bool</code></dt>
@@ -763,18 +787,18 @@ eigenvalues (frequencies).</dd>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><strong><code>ws</code></strong></dt>
-<dd><code>ws[ik, :]</code> is the maginary frequency for the <code>ik</code>'th <code>(kx, kz)</code>
-value.</dd>
+<dd><code>ws[ik, :]</code> contains imaginary frequencies for the <code>ik</code>'th
+<code>(kx, kz)</code> value.</dd>
 <dt><strong><code>vrs</code></strong></dt>
-<dd><code>vrs[ik, ...]</code> is the normalized right eigenvector corresponding to
-the eigenvalue <code>w[ik, is]</code> is the column <code>vr[ik, :, is]</code>. Only
-returned if <code>eigenvector=True</code>.</dd>
+<dd><code>vrs[ik, :, iw]</code> is the normalized right eigenvector
+corresponding to the eigenvalue <code>ws[ik, iw]</code>. Only returned if
+<code>eigenvector=True</code>.</dd>
 </dl></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def k2w_es3d(kxs, kzs, species, params, sort=&#39;real&#39;, eigenvector=False):
+<pre><code class="python">def k2w_es3d(kxs, kzs, species, params, isMag=None, sort=&#39;real&#39;, eigenvector=False):
     &#34;&#34;&#34;Compute dispersion relation for a 3d multifluid-Poisson system with
     background magnetic field along `z` and wavevector along `x` and `z`.
 
@@ -782,7 +806,7 @@ returned if <code>eigenvector=True</code>.</dd>
         kxs (np.ndarray): An array of wavevector component along `x`.
         kzs (np.ndarray): An array of wavevector component along `z`.
         species (np.ndarray): A `nSpecies*nComponents` matrix. The components
-            are: `q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para`.
+            are: `q, m, n0, v0x, v0z, p0perp, p0para, gamma_perp, gamma_para`.
             An example:
 
                 species = np.array([
@@ -792,30 +816,38 @@ returned if <code>eigenvector=True</code>.</dd>
                      gamma_perp_i, gamma_para_i],  # ion
                 ])
         params (dict): A dictionary with keys `Bz`, `epsilon0`.
+        isMag (list or None): A list of booleans to indicate wether each species
+            is magnetized. If not set, all species are assumed to be magnetized.
         sort (str): `&#39;real&#39;` or `&#39;imag&#39;` or `&#39;none&#39;`. Order to sort results.
         eigenvector (bool): Switch to return eigenvector in addition to
             eigenvalues (frequencies).
 
     Returns:
-        ws: `ws[ik, :]` is the maginary frequency for the `ik`&#39;th `(kx, kz)`
-            value.
-        vrs: `vrs[ik, ...]` is the normalized right eigenvector corresponding to
-            the eigenvalue `w[ik, is]` is the column `vr[ik, :, is]`. Only
-            returned if ``eigenvector=True``.
+        ws: `ws[ik, :]` contains imaginary frequencies for the `ik`&#39;th
+            `(kx, kz)` value.
+        vrs: `vrs[ik, :, iw]` is the normalized right eigenvector
+            corresponding to the eigenvalue `ws[ik, iw]`. Only returned if
+            ``eigenvector=True``.
     &#34;&#34;&#34;
-    NN, VX, VZ = range(3)
+    NN, VX, VY, VZ = range(4)
 
     q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = \
             np.rollaxis(species, axis=1)
+    nSpecies = len(q)
     B = params[&#39;Bz&#39;]
     epsilon0 = params[&#39;epsilon0&#39;]
+    
+    if isMag is None:
+        isMag = [True] * nSpecies
+    assert (len(isMag) == nSpecies)
+    isMag = np.array(isMag, dtype=int)
 
     rho = n * m
     cs_para2 = gamma_para * p_para / rho
     cs_perp2 = gamma_perp * p_perp / rho
+    wc = q * B / m * isMag
 
-    nSpecies = len(q)
-    nSolutions = 3 * nSpecies  # EM
+    nSolutions = 4 * nSpecies  # EM
     nk = len(kxs)
 
     M = np.zeros((nSolutions, nSolutions), dtype=np.complex128)
@@ -829,7 +861,7 @@ returned if <code>eigenvector=True</code>.</dd>
         kz = kzs[ik]
         k2 = kx**2 + kz**2
         for j in range(nSpecies):
-            idx = j * 3  # first index of fluid variables, i.e., number density
+            idx = j * 4  # first index of fluid variables, i.e., number density
 
             # dn due to dn
             M[idx + NN, idx + NN] = -1j * (kx * vx[j] + kz * vz[j])
@@ -840,16 +872,21 @@ returned if <code>eigenvector=True</code>.</dd>
 
             # dvi due to dvi
             M[idx + VX, idx + VX] = -1j * (kx * vx[j] + kz * vz[j])
+            M[idx + VY, idx + VY] = -1j * (kx * vx[j] + kz * vz[j])
             M[idx + VZ, idx + VZ] = -1j * (kx * vx[j] + kz * vz[j])
 
             # dvx due to dn (from dp, adiabatic EoS)
             M[idx + VX, idx + NN] = -1j * kx * cs_perp2[j] / n[j]
             # dvz due to dn (from dp, adiabatic EoS)
             M[idx + VZ, idx + NN] = -1j * kz * cs_para2[j] / n[j]
+            # dvx due to dvy (from vxB force)
+            M[idx + VX, idx + VY] = wc[j]
+            # dvy due to dvx (from vxB force)
+            M[idx + VY, idx + VX] = -wc[j]
 
             # dvx due to dn of all species (from phi or E, Gauss&#39;s law)
             for s in range(nSpecies):
-                idxs = s * 3
+                idxs = s * 4
                 M[idx + VX, idxs + NN] += (q[j] / m[j]) * q[s] \
                                         * (-1j * kx / k2 /epsilon0)
                 M[idx + VZ, idxs + NN] += (q[j] / m[j]) * q[s] \
@@ -898,9 +935,9 @@ returned if <code>eigenvector=True</code>.</dd>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="xenon.fluid.fluid.k2w_em3d" href="#xenon.fluid.fluid.k2w_em3d">k2w_em3d</a></code></li>
-<li><code><a title="xenon.fluid.fluid.k2w_es1d" href="#xenon.fluid.fluid.k2w_es1d">k2w_es1d</a></code></li>
-<li><code><a title="xenon.fluid.fluid.k2w_es3d" href="#xenon.fluid.fluid.k2w_es3d">k2w_es3d</a></code></li>
+<li><code><a title="xenon.fluid.fluid_dr.k2w_em3d" href="#xenon.fluid.fluid_dr.k2w_em3d">k2w_em3d</a></code></li>
+<li><code><a title="xenon.fluid.fluid_dr.k2w_es1d" href="#xenon.fluid.fluid_dr.k2w_es1d">k2w_es1d</a></code></li>
+<li><code><a title="xenon.fluid.fluid_dr.k2w_es3d" href="#xenon.fluid.fluid_dr.k2w_es3d">k2w_es3d</a></code></li>
 </ul>
 </li>
 </ul>

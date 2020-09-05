@@ -26,12 +26,13 @@
 </summary>
 <pre><code class="python">__all__ = [
     &#39;plot_dr&#39;,
+    &#39;extra_params&#39;,
+    &#39;draw_extra_params&#39;,
 ]
 
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from ..fluid import fluid
 
 
 def plot_dr(
@@ -165,7 +166,322 @@ def plot_dr(
     if ax1 is not None:
         ax1.set_ylabel(r&#39;$\gamma{}$&#39;.format(wnorm_name))
         ax1.set_xlabel(r&#39;$k{}$&#39;.format(knorm_name))
-        ax1.set_xlim(ks_.min(), ks_.max())</code></pre>
+        ax1.set_xlim(ks_.min(), ks_.max())
+
+
+class extra_params():
+    &#34;&#34;&#34;A class to compute useful variables from basic parameters for repeated
+    usage.&#34;&#34;&#34;
+    def __init__(self, species, params, problem_type=None):
+        &#34;&#34;&#34;
+        Args:
+            species (np.ndarray): A `nSpecies*nComponents` matrix. The components
+                are: `q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para`.
+                An example for plasma with isothermal electrons and adiabatic ions:  
+
+                    species = np.array([
+                        [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0perp_e, p0para_e,
+                         gamma_perp_e, gamma_para_e],  # electron
+                        [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0perp_i, p0para_i,
+                         gamma_perp_i, gamma_para_i],  # ion
+                    ])
+            params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
+        &#34;&#34;&#34;
+        if species.shape[1] == 10:  # fluid em3d
+            q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
+                species, axis=1)
+            if problem_type is None:
+                problem_type = &#39;em3d&#39;
+            else:
+                assert problem_type == &#39;em3d&#39;
+
+        elif species.shape[1] == 9:  # fluid es3d
+            q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
+                species, axis=1)
+            vy = 0
+            if problem_type is None:
+                problem_type = &#39;es3d&#39;
+            else:
+                assert problem_type == &#39;es3d&#39;
+
+        elif species.shape[1] == 6:  # fluid es1d
+            q, m, n, vx, p, gamma = np.rollaxis(species, axis=1)
+            vy = 0
+            vz = 0
+            p_perp = p
+            p_para = p
+            gamma_perp = gamma
+            gamma_para = gamma
+            if problem_type is None:
+                problem_type = &#39;es1d&#39;
+            else:
+                assert problem_type == &#39;es1d&#39;
+
+        elif species.shape[1] == 7:  # vlasov es3d
+            q, m, n, vx, vz, p_perp, p_para = np.rollaxis(
+                    np.array(species), axis=1)
+            vy = 0
+            if problem_type is None:
+                problem_type = &#39;es3d&#39;
+            else:
+                assert problem_type == &#39;es3d&#39;
+
+        elif species.shape[1] == 5:  # vlasov es1d
+            q, m, n, vx, p = np.rollaxis(species, axis=1)
+            gamma = 1
+            vy = 0
+            vz = 0
+            p_perp = p
+            p_para = p
+            gamma_perp = gamma
+            gamma_para = gamma
+            if problem_type is None:
+                problem_type = &#39;es1d&#39;
+            else:
+                assert problem_type == &#39;es1d&#39;
+
+        else:
+            raise ValueError(
+                    &#39;`species` must have 6 (fluid es1d), 9 (fluid es3d) 10 &#39;
+                    &#39;(fluid em3d) , 5 (vlasov es1d), or 7 (vlasov es3d) &#39;
+                    &#39;components.&#39;)
+
+        nSpecies = len(q)
+
+        B, c = 0, 1
+        if problem_type in [&#39;es3d&#39;, &#39;em3d&#39;]:
+            B = params[&#39;Bz&#39;]
+        if problem_type in [&#39;em3d&#39;]:
+            c = params[&#39;c&#39;]
+        epsilon0 = params[&#39;epsilon0&#39;]
+
+        c2 = c**2
+        mu0 = 1 / c2 / epsilon0
+        wp = np.sqrt(n * q**2. / epsilon0 / m)
+        wp_tot = np.linalg.norm(wp)
+        wc = q * B / m
+        cs = np.sqrt(gamma_para * p_para / n / m)  # sound speeds
+        rho_m = (n * m).sum()
+        vAlf = np.sqrt(B**2 / mu0 / (m * n))
+        if abs(B) &gt; 0:
+            vAlf_tot = np.sqrt(1 / (1 / vAlf**2).sum())
+        else:
+            vAlf_tot = 0
+        vAlf2 = vAlf_tot**2
+        # magnetosonic speed
+        if (np.abs(B) &gt; np.finfo(np.float64).eps * 1e3):
+            vMS = np.sqrt(c2 * vAlf2 * (1 + (cs**2 / vAlf**2).sum()) /
+                          (vAlf2 + c2))
+        else:
+            vMS = c2 * vAlf2 / (c2 + vAlf2)
+
+        self.q = q
+        self.m = m
+        self.n = n
+        self.vx = vx
+        self.vy = vy
+        self.vz = vz
+        self.p_para = p_para
+        self.p_perp = p_perp
+        self.gamma_para = gamma_para
+        self.gamma_perp = gamma_perp
+        self.nSpecies = nSpecies
+
+        # kB * T
+        T_para = p_para / n
+        T_perp = p_perp / n
+        T = p_para / n  # FIXME more rigorous
+
+        lambdaD = np.sqrt(epsilon0 * T / n / q**2)
+
+        self.T_para = T_para
+        self.T_perp = T_perp
+        self.T = T
+        self.lambdaD = lambdaD
+
+        for val, key in enumerate(params):
+            setattr(self, key, val)
+
+        self.c = np.sqrt(c2)
+        self.wp = wp
+        self.wp_tot = wp_tot
+        self.wc = wc
+        self.cs = cs
+        self.rho_m = rho_m
+        self.vAlf = vAlf
+        self.vAlf_tot = vAlf_tot
+        self.vMS = vMS
+
+        if nSpecies == 2 and q[0] &lt; 0. and q[1] &gt; 0:
+            wpe = self.wp[0]
+            wpi = self.wp[1]
+            wce = self.wc[0]
+            wci = self.wc[1]
+            wp = self.wp_tot
+            # exact lower and higher hybrid frequencies; solutions of S=0
+            w2_sum = 0.5 * (wpe**2 + wpi**2 + wce**2 + wci**2)
+            w2_perm = wpe**2 * wci**2 + wpi**2 * wce**2 + wce**2 * wci**2
+            self.wLH = np.sqrt(w2_sum - np.sqrt(w2_sum**2 - w2_perm))
+            self.wUH = np.sqrt(w2_sum + np.sqrt(w2_sum**2 - w2_perm))
+            # exact cutoff frequencies left- and right-handed
+            # circularly-polarized waves solutions of L=0 and R=0
+            self.wR = 0.5 * (abs(wce) - wci) + np.sqrt((0.5 *
+                                                        (abs(wce) + wci))**2 +
+                                                       wp**2)
+            self.wL = 0.5 * (wci - abs(wce)) + np.sqrt((0.5 *
+                                                        (abs(wce) + wci))**2 +
+                                                       wp**2)
+
+            self.wpe = wpe
+            self.wpi = wpi
+            self.wce = wce
+            self.wci = wci
+            self.cse = self.cs[0]
+            self.csi = self.cs[1]
+            self.vAlfe = self.vAlf[0]
+            self.vAlfi = self.vAlf[1]
+            self.pe = self.p_para[0]
+            self.pi = self.p_para[1]
+            self.rhoe = self.n[0] * self.m[0]
+            self.rhoi = self.n[1] * self.m[1]
+
+
+def draw_extra_params(params, ax, ks=None, what=[], cost=None):
+    &#34;&#34;&#34;
+
+    Args:
+        params: A extra_params instance.
+        what: A list of various curves to draw. Eligible elements are:
+            vAlf, vMs, wp, wpe, wpi, wce, wci, wUH, wLH, wL, wR, wce, wci.
+        cost: cos(theta) to be used with vAlf, vMs, wce, wci.
+    &#34;&#34;&#34;
+    if &#39;vAlf&#39; in what:
+        ax.plot(ks, ks * params.vAlf_tot, label=r&#39;$kv_{A}$&#39;, c=&#39;r&#39;)
+    if &#39;vAlf*cost&#39; in what:
+        ax.plot(ks,
+                ks * params.vAlf_tot * cost,
+                label=r&#39;$kv_{A}\cos\theta$&#39;,
+                lw=2,
+                ls=&#39;dotted&#39;,
+                c=&#39;r&#39;)
+    if &#39;vMS&#39; in what:
+        ax.plot(ks, ks * params.vMS, label=r&#39;$kv_{\rm{magsonic}}$&#39;, c=&#39;b&#39;)
+    if &#39;vMS*cost&#39; in what:
+        ax.plot(ks,
+                ks * params.vMS * cost,
+                label=r&#39;$kv_{\rm{magsonic}}\cos\theta$&#39;,
+                lw=2,
+                ls=&#39;dotted&#39;,
+                c=&#39;b&#39;)
+
+    if &#39;wp&#39; in what:
+        ax.axhline(params.wp_tot, label=r&#39;$\omega_{p}$&#39;, c=&#39;r&#39;, ls=&#39;dotted&#39;)
+    if &#39;wpi&#39; in what:
+        ax.axhline(params.wpi, label=r&#39;$\omega_{pi}$&#39;, ls=&#39;dotted&#39;, c=&#39;g&#39;)
+    if &#39;wpe&#39; in what:
+        ax.axhline(params.wpe, label=r&#39;$\omega_{pe}$&#39;, ls=&#39;dotted&#39;, c=&#39;b&#39;)
+    if &#39;wUH&#39; in what:
+        ax.axhline(params.wUH, label=r&#39;$\omega_{UH}$&#39;, ls=&#39;--&#39;,
+                   c=&#39;c&#39;)  # upper hybrid
+    if &#39;wLH&#39; in what:
+        ax.axhline(params.wLH, label=r&#39;$\omega_{LH}$&#39;, ls=&#39;--&#39;,
+                   c=&#39;m&#39;)  # lower hybrid
+    if &#39;wL&#39; in what:
+        ax.axhline(params.wL, label=r&#39;$\omega_{L}$&#39;, ls=&#39;--&#39;, c=&#39;k&#39;)
+    if &#39;wR&#39; in what:
+        ax.axhline(params.wR, label=r&#39;$\omega_{R}$&#39;, ls=&#39;--&#39;, c=&#39;g&#39;)
+    if &#39;wci&#39; in what:
+        ax.axhline(params.wci * cost,
+                   label=r&#39;$\omega_{ci}\cos\theta$&#39;,
+                   ls=&#39;dotted&#39;,
+                   c=&#39;steelblue&#39;)
+    if &#39;wce&#39; in what:
+        ax.axhline(abs(params.wce * cost),
+                   label=r&#39;$\omega_{ce}\cos\theta$&#39;,
+                   ls=&#39;dotted&#39;,
+                   c=&#39;maroon&#39;)
+
+    if &#39;acoustic&#39; in what or &#39;aw&#39; in what:
+        line_kwargs = dict(alpha=0.8, lw=5, ls=&#39;dotted&#39;, c=&#39;b&#39;, label=&#39;AW&#39;)
+        wp2 = params.wp_tot**2
+        ci2 = params.csi**2
+        ce2 = params.cse**2
+        wpi2 = params.wpi**2
+        wpe2 = params.wpe**2
+        ks2 = ks**2
+        ws = np.empty((len(ks), 4), dtype=np.complex128)
+        for ik, k2 in enumerate(ks2):
+            ws[ik, :] = np.roots(
+                (1, 0, -(wp2 + k2 * ci2 + k2 * ce2), 0,
+                 k2 * ci2 * wpe2 + k2 * ce2 * wpi2 + k2**2 * ce2 * ci2))
+        ax.plot(
+            ks,
+            ws[:, 3].real,  # FIXME sort result?
+            **line_kwargs)
+    if &#39;acoustic*cost&#39; in what or &#39;aw*cost&#39; in what:
+        line_kwargs = dict(
+            alpha=0.8,
+            lw=5,
+            ls=&#39;dotted&#39;,
+            c=&#39;orange&#39;,
+            label=
+            r&#39;$k\sqrt{\frac{\omega_{pe}^{2}c_{i}^{2}+\omega_{pi}^{2}c_{e}^{2}}{\omega_{pi}^{2}+\omega_{pe}^{2}}}\cos{\theta}$&#39;
+        )
+        ci2 = params.csi**2
+        ce2 = params.cse**2
+        wpi2 = params.wpi**2
+        wpe2 = params.wpe**2
+        v_acoustic = np.sqrt((wpe2 * ci2 + wpi2 * ce2) / (wpi2 + wpe2))
+        ax.plot(ks, ks * v_acoustic * cost, **line_kwargs)
+
+    if &#39;ion acoustic&#39; in what or &#39;iaw&#39; in what:
+        # valid for mi &gt;&gt; me
+        line_kwargs = dict(alpha=0.8, lw=5, ls=&#39;dotted&#39;, c=&#39;c&#39;, label=&#39;IAW&#39;)
+        if params.pe &gt; 0:
+            kLambdaD2 = ks**2 * params.pe / params.wpe**2 / params.rhoe
+            ax.plot(ks, params.wpi / np.sqrt(1 + 1 / kLambdaD2), **line_kwargs)
+        else:
+            ax.plot((np.nan), (np.nan), **line_kwargs)
+
+
+def calc_wh(wpe, wpi, wce, wci):
+    w2_sum = 0.5 * (wpe**2 + wpi**2 + wce**2 + wci**2)
+    w2_perm = wpe**2 * wci**2 + wpi**2 * wce**2 + wce**2 * wci**2
+    wLH = np.sqrt(w2_sum - np.sqrt(w2_sum**2 - w2_perm))
+    wUH = np.sqrt(w2_sum + np.sqrt(w2_sum**2 - w2_perm))
+    return wLH, wUH
+
+
+def calc_wLH(wpe, wpi, wce, wci):
+    &#34;&#34;&#34;Compute exact lower hybrid frequency for an electron-ion plasma.
+    &#34;&#34;&#34;
+    wLH, wUH = calc_wh(wpe, wpi, wce, wci)
+    return wLH
+
+
+def calc_wUH(wpe, wpi, wce, wci):
+    &#34;&#34;&#34;Compute exact upper hybrid frequency for an electron-ion plasma.
+    &#34;&#34;&#34;
+    wLH, wUH = calc_wh(wpe, wpi, wce, wci)
+    return wUH
+
+
+def calc_wR(wpe, wpi, wce, wci):
+    &#34;&#34;&#34;Compute exact cutoff frequencies left-handed circularly-polarized waves.
+
+    The wave is solution of L=0 in Stix&#39;s notations.
+    &#34;&#34;&#34;
+    wce = abs(wce)
+    return 0.5 * (wce - wci) + np.sqrt((0.5 * (wce + wci))**2 + wp**2)
+
+
+def calc_wL(wpe, wpi, wce, wci):
+    &#34;&#34;&#34;Compute exact cutoff frequencies right-handed circularly-polarized waves.
+
+    The wave is solution of R=0 in Stix&#39;s notations.
+    &#34;&#34;&#34;
+    wce = abs(wce)
+    return 0.5 * (wci - wce) + np.sqrt((0.5 * (wce + wci))**2 + wp**2)</code></pre>
 </details>
 </section>
 <section>
@@ -175,6 +491,122 @@ def plot_dr(
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="xenon.common.utils.draw_extra_params"><code class="name flex">
+<span>def <span class="ident">draw_extra_params</span></span>(<span>params, ax, ks=None, what=[], cost=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>params</code></strong></dt>
+<dd>A extra_params instance.</dd>
+<dt><strong><code>what</code></strong></dt>
+<dd>A list of various curves to draw. Eligible elements are:
+vAlf, vMs, wp, wpe, wpi, wce, wci, wUH, wLH, wL, wR, wce, wci.</dd>
+<dt><strong><code>cost</code></strong></dt>
+<dd>cos(theta) to be used with vAlf, vMs, wce, wci.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def draw_extra_params(params, ax, ks=None, what=[], cost=None):
+    &#34;&#34;&#34;
+
+    Args:
+        params: A extra_params instance.
+        what: A list of various curves to draw. Eligible elements are:
+            vAlf, vMs, wp, wpe, wpi, wce, wci, wUH, wLH, wL, wR, wce, wci.
+        cost: cos(theta) to be used with vAlf, vMs, wce, wci.
+    &#34;&#34;&#34;
+    if &#39;vAlf&#39; in what:
+        ax.plot(ks, ks * params.vAlf_tot, label=r&#39;$kv_{A}$&#39;, c=&#39;r&#39;)
+    if &#39;vAlf*cost&#39; in what:
+        ax.plot(ks,
+                ks * params.vAlf_tot * cost,
+                label=r&#39;$kv_{A}\cos\theta$&#39;,
+                lw=2,
+                ls=&#39;dotted&#39;,
+                c=&#39;r&#39;)
+    if &#39;vMS&#39; in what:
+        ax.plot(ks, ks * params.vMS, label=r&#39;$kv_{\rm{magsonic}}$&#39;, c=&#39;b&#39;)
+    if &#39;vMS*cost&#39; in what:
+        ax.plot(ks,
+                ks * params.vMS * cost,
+                label=r&#39;$kv_{\rm{magsonic}}\cos\theta$&#39;,
+                lw=2,
+                ls=&#39;dotted&#39;,
+                c=&#39;b&#39;)
+
+    if &#39;wp&#39; in what:
+        ax.axhline(params.wp_tot, label=r&#39;$\omega_{p}$&#39;, c=&#39;r&#39;, ls=&#39;dotted&#39;)
+    if &#39;wpi&#39; in what:
+        ax.axhline(params.wpi, label=r&#39;$\omega_{pi}$&#39;, ls=&#39;dotted&#39;, c=&#39;g&#39;)
+    if &#39;wpe&#39; in what:
+        ax.axhline(params.wpe, label=r&#39;$\omega_{pe}$&#39;, ls=&#39;dotted&#39;, c=&#39;b&#39;)
+    if &#39;wUH&#39; in what:
+        ax.axhline(params.wUH, label=r&#39;$\omega_{UH}$&#39;, ls=&#39;--&#39;,
+                   c=&#39;c&#39;)  # upper hybrid
+    if &#39;wLH&#39; in what:
+        ax.axhline(params.wLH, label=r&#39;$\omega_{LH}$&#39;, ls=&#39;--&#39;,
+                   c=&#39;m&#39;)  # lower hybrid
+    if &#39;wL&#39; in what:
+        ax.axhline(params.wL, label=r&#39;$\omega_{L}$&#39;, ls=&#39;--&#39;, c=&#39;k&#39;)
+    if &#39;wR&#39; in what:
+        ax.axhline(params.wR, label=r&#39;$\omega_{R}$&#39;, ls=&#39;--&#39;, c=&#39;g&#39;)
+    if &#39;wci&#39; in what:
+        ax.axhline(params.wci * cost,
+                   label=r&#39;$\omega_{ci}\cos\theta$&#39;,
+                   ls=&#39;dotted&#39;,
+                   c=&#39;steelblue&#39;)
+    if &#39;wce&#39; in what:
+        ax.axhline(abs(params.wce * cost),
+                   label=r&#39;$\omega_{ce}\cos\theta$&#39;,
+                   ls=&#39;dotted&#39;,
+                   c=&#39;maroon&#39;)
+
+    if &#39;acoustic&#39; in what or &#39;aw&#39; in what:
+        line_kwargs = dict(alpha=0.8, lw=5, ls=&#39;dotted&#39;, c=&#39;b&#39;, label=&#39;AW&#39;)
+        wp2 = params.wp_tot**2
+        ci2 = params.csi**2
+        ce2 = params.cse**2
+        wpi2 = params.wpi**2
+        wpe2 = params.wpe**2
+        ks2 = ks**2
+        ws = np.empty((len(ks), 4), dtype=np.complex128)
+        for ik, k2 in enumerate(ks2):
+            ws[ik, :] = np.roots(
+                (1, 0, -(wp2 + k2 * ci2 + k2 * ce2), 0,
+                 k2 * ci2 * wpe2 + k2 * ce2 * wpi2 + k2**2 * ce2 * ci2))
+        ax.plot(
+            ks,
+            ws[:, 3].real,  # FIXME sort result?
+            **line_kwargs)
+    if &#39;acoustic*cost&#39; in what or &#39;aw*cost&#39; in what:
+        line_kwargs = dict(
+            alpha=0.8,
+            lw=5,
+            ls=&#39;dotted&#39;,
+            c=&#39;orange&#39;,
+            label=
+            r&#39;$k\sqrt{\frac{\omega_{pe}^{2}c_{i}^{2}+\omega_{pi}^{2}c_{e}^{2}}{\omega_{pi}^{2}+\omega_{pe}^{2}}}\cos{\theta}$&#39;
+        )
+        ci2 = params.csi**2
+        ce2 = params.cse**2
+        wpi2 = params.wpi**2
+        wpe2 = params.wpe**2
+        v_acoustic = np.sqrt((wpe2 * ci2 + wpi2 * ce2) / (wpi2 + wpe2))
+        ax.plot(ks, ks * v_acoustic * cost, **line_kwargs)
+
+    if &#39;ion acoustic&#39; in what or &#39;iaw&#39; in what:
+        # valid for mi &gt;&gt; me
+        line_kwargs = dict(alpha=0.8, lw=5, ls=&#39;dotted&#39;, c=&#39;c&#39;, label=&#39;IAW&#39;)
+        if params.pe &gt; 0:
+            kLambdaD2 = ks**2 * params.pe / params.wpe**2 / params.rhoe
+            ax.plot(ks, params.wpi / np.sqrt(1 + 1 / kLambdaD2), **line_kwargs)
+        else:
+            ax.plot((np.nan), (np.nan), **line_kwargs)</code></pre>
+</details>
+</dd>
 <dt id="xenon.common.utils.plot_dr"><code class="name flex">
 <span>def <span class="ident">plot_dr</span></span>(<span>ks, ws, knorm=1.0, wnorm=1.0, wi_mask_funcs=[], wri_mask_funcs=[], knorm_name='', wnorm_name='', wrmin=-inf, wrmax=inf, wimin=-inf, wimax=inf, w_min_max_is_normed=True, ax0=None, ax1=None, pargs0={}, pargs1={})</span>
 </code></dt>
@@ -378,6 +810,214 @@ modes, use<pre><code>def wri_mask_func0(wr, wi):
 </dl>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="xenon.common.utils.extra_params"><code class="flex name class">
+<span>class <span class="ident">extra_params</span></span>
+<span>(</span><span>species, params, problem_type=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>A class to compute useful variables from basic parameters for repeated
+usage.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>species</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A <code>nSpecies*nComponents</code> matrix. The components
+are: <code>q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para</code>.
+An example for plasma with isothermal electrons and adiabatic ions:
+<pre><code>species = np.array([
+    [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0perp_e, p0para_e,
+     gamma_perp_e, gamma_para_e],  # electron
+    [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0perp_i, p0para_i,
+     gamma_perp_i, gamma_para_i],  # ion
+])
+</code></pre>
+</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary with keys <code>Bz</code>, <code>c</code>, <code>epsilon0</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class extra_params():
+    &#34;&#34;&#34;A class to compute useful variables from basic parameters for repeated
+    usage.&#34;&#34;&#34;
+    def __init__(self, species, params, problem_type=None):
+        &#34;&#34;&#34;
+        Args:
+            species (np.ndarray): A `nSpecies*nComponents` matrix. The components
+                are: `q, m, n0, v0x, v0y, v0z, p0perp, p0para, gamma_perp, gamma_para`.
+                An example for plasma with isothermal electrons and adiabatic ions:  
+
+                    species = np.array([
+                        [q_e, m_e, n0_e, v0x_e, v0y_e, v0z_e, p0perp_e, p0para_e,
+                         gamma_perp_e, gamma_para_e],  # electron
+                        [q_i, m_i, n0_i, v0x_i, v0y_i, v0z_i, p0perp_i, p0para_i,
+                         gamma_perp_i, gamma_para_i],  # ion
+                    ])
+            params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
+        &#34;&#34;&#34;
+        if species.shape[1] == 10:  # fluid em3d
+            q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
+                species, axis=1)
+            if problem_type is None:
+                problem_type = &#39;em3d&#39;
+            else:
+                assert problem_type == &#39;em3d&#39;
+
+        elif species.shape[1] == 9:  # fluid es3d
+            q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
+                species, axis=1)
+            vy = 0
+            if problem_type is None:
+                problem_type = &#39;es3d&#39;
+            else:
+                assert problem_type == &#39;es3d&#39;
+
+        elif species.shape[1] == 6:  # fluid es1d
+            q, m, n, vx, p, gamma = np.rollaxis(species, axis=1)
+            vy = 0
+            vz = 0
+            p_perp = p
+            p_para = p
+            gamma_perp = gamma
+            gamma_para = gamma
+            if problem_type is None:
+                problem_type = &#39;es1d&#39;
+            else:
+                assert problem_type == &#39;es1d&#39;
+
+        elif species.shape[1] == 7:  # vlasov es3d
+            q, m, n, vx, vz, p_perp, p_para = np.rollaxis(
+                    np.array(species), axis=1)
+            vy = 0
+            if problem_type is None:
+                problem_type = &#39;es3d&#39;
+            else:
+                assert problem_type == &#39;es3d&#39;
+
+        elif species.shape[1] == 5:  # vlasov es1d
+            q, m, n, vx, p = np.rollaxis(species, axis=1)
+            gamma = 1
+            vy = 0
+            vz = 0
+            p_perp = p
+            p_para = p
+            gamma_perp = gamma
+            gamma_para = gamma
+            if problem_type is None:
+                problem_type = &#39;es1d&#39;
+            else:
+                assert problem_type == &#39;es1d&#39;
+
+        else:
+            raise ValueError(
+                    &#39;`species` must have 6 (fluid es1d), 9 (fluid es3d) 10 &#39;
+                    &#39;(fluid em3d) , 5 (vlasov es1d), or 7 (vlasov es3d) &#39;
+                    &#39;components.&#39;)
+
+        nSpecies = len(q)
+
+        B, c = 0, 1
+        if problem_type in [&#39;es3d&#39;, &#39;em3d&#39;]:
+            B = params[&#39;Bz&#39;]
+        if problem_type in [&#39;em3d&#39;]:
+            c = params[&#39;c&#39;]
+        epsilon0 = params[&#39;epsilon0&#39;]
+
+        c2 = c**2
+        mu0 = 1 / c2 / epsilon0
+        wp = np.sqrt(n * q**2. / epsilon0 / m)
+        wp_tot = np.linalg.norm(wp)
+        wc = q * B / m
+        cs = np.sqrt(gamma_para * p_para / n / m)  # sound speeds
+        rho_m = (n * m).sum()
+        vAlf = np.sqrt(B**2 / mu0 / (m * n))
+        if abs(B) &gt; 0:
+            vAlf_tot = np.sqrt(1 / (1 / vAlf**2).sum())
+        else:
+            vAlf_tot = 0
+        vAlf2 = vAlf_tot**2
+        # magnetosonic speed
+        if (np.abs(B) &gt; np.finfo(np.float64).eps * 1e3):
+            vMS = np.sqrt(c2 * vAlf2 * (1 + (cs**2 / vAlf**2).sum()) /
+                          (vAlf2 + c2))
+        else:
+            vMS = c2 * vAlf2 / (c2 + vAlf2)
+
+        self.q = q
+        self.m = m
+        self.n = n
+        self.vx = vx
+        self.vy = vy
+        self.vz = vz
+        self.p_para = p_para
+        self.p_perp = p_perp
+        self.gamma_para = gamma_para
+        self.gamma_perp = gamma_perp
+        self.nSpecies = nSpecies
+
+        # kB * T
+        T_para = p_para / n
+        T_perp = p_perp / n
+        T = p_para / n  # FIXME more rigorous
+
+        lambdaD = np.sqrt(epsilon0 * T / n / q**2)
+
+        self.T_para = T_para
+        self.T_perp = T_perp
+        self.T = T
+        self.lambdaD = lambdaD
+
+        for val, key in enumerate(params):
+            setattr(self, key, val)
+
+        self.c = np.sqrt(c2)
+        self.wp = wp
+        self.wp_tot = wp_tot
+        self.wc = wc
+        self.cs = cs
+        self.rho_m = rho_m
+        self.vAlf = vAlf
+        self.vAlf_tot = vAlf_tot
+        self.vMS = vMS
+
+        if nSpecies == 2 and q[0] &lt; 0. and q[1] &gt; 0:
+            wpe = self.wp[0]
+            wpi = self.wp[1]
+            wce = self.wc[0]
+            wci = self.wc[1]
+            wp = self.wp_tot
+            # exact lower and higher hybrid frequencies; solutions of S=0
+            w2_sum = 0.5 * (wpe**2 + wpi**2 + wce**2 + wci**2)
+            w2_perm = wpe**2 * wci**2 + wpi**2 * wce**2 + wce**2 * wci**2
+            self.wLH = np.sqrt(w2_sum - np.sqrt(w2_sum**2 - w2_perm))
+            self.wUH = np.sqrt(w2_sum + np.sqrt(w2_sum**2 - w2_perm))
+            # exact cutoff frequencies left- and right-handed
+            # circularly-polarized waves solutions of L=0 and R=0
+            self.wR = 0.5 * (abs(wce) - wci) + np.sqrt((0.5 *
+                                                        (abs(wce) + wci))**2 +
+                                                       wp**2)
+            self.wL = 0.5 * (wci - abs(wce)) + np.sqrt((0.5 *
+                                                        (abs(wce) + wci))**2 +
+                                                       wp**2)
+
+            self.wpe = wpe
+            self.wpi = wpi
+            self.wce = wce
+            self.wci = wci
+            self.cse = self.cs[0]
+            self.csi = self.cs[1]
+            self.vAlfe = self.vAlf[0]
+            self.vAlfi = self.vAlf[1]
+            self.pe = self.p_para[0]
+            self.pi = self.p_para[1]
+            self.rhoe = self.n[0] * self.m[0]
+            self.rhoi = self.n[1] * self.m[1]</code></pre>
+</details>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -393,7 +1033,15 @@ modes, use<pre><code>def wri_mask_func0(wr, wi):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="xenon.common.utils.draw_extra_params" href="#xenon.common.utils.draw_extra_params">draw_extra_params</a></code></li>
 <li><code><a title="xenon.common.utils.plot_dr" href="#xenon.common.utils.plot_dr">plot_dr</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="xenon.common.utils.extra_params" href="#xenon.common.utils.extra_params">extra_params</a></code></h4>
+</li>
 </ul>
 </li>
 </ul>

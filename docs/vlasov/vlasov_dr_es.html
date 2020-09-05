@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.1" />
-<title>xenon.vlasov.vlasov_es API documentation</title>
+<title>xenon.vlasov.vlasov_dr_es API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>xenon.vlasov.vlasov_es</code></h1>
+<h1 class="title">Module <code>xenon.vlasov.vlasov_dr_es</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -29,7 +29,7 @@
 import numpy as np
 import scipy.linalg
 from scipy.special import ive
-from ..common import bzs, czs
+from .vlasov_utils import bzs, czs
 import logging
 
 
@@ -141,8 +141,8 @@ def k2w_es3d(
           `q, m, n, v0x, v0z, p0x, p0z`.
         params (dict): A dictionary of relevant parameters. Here, the used
           ones are `epsilon0` and `Bz`.
-        isMag (list or None): A list of booleans to indicate wether each species is
-            magnetized. If not set, all species are assumed to be magnetized.
+        isMag (list or None): A list of booleans to indicate wether each species
+            is magnetized. If not set, all species are assumed to be magnetized.
         J (int): Order of Pade approximation. One of (`8`, `12`).
         N (int): Highest order of cylctron harmonic to include in the Bessel
           expansion of the bi-Maxwellian distribution. If `check_convergence`
@@ -202,6 +202,7 @@ def k2w_es3d(
                                     kp_rc2m, Nmax, bessSum))
                 Ns[ik] = Nmax
     logging.debug(&#34;Ns {}&#34;.format(Ns))
+    print(&#39;Ns&#39;, Ns)
     if dry_run:
         return
 
@@ -264,7 +265,7 @@ def k2w_es3d(
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="xenon.vlasov.vlasov_es.k2w_es1d"><code class="name flex">
+<dt id="xenon.vlasov.vlasov_dr_es.k2w_es1d"><code class="name flex">
 <span>def <span class="ident">k2w_es1d</span></span>(<span>ks, species, params, J=8, sort='real')</span>
 </code></dt>
 <dd>
@@ -381,7 +382,7 @@ and <code>12</code>.</dd>
     return np.array(ws)</code></pre>
 </details>
 </dd>
-<dt id="xenon.vlasov.vlasov_es.k2w_es3d"><code class="name flex">
+<dt id="xenon.vlasov.vlasov_dr_es.k2w_es3d"><code class="name flex">
 <span>def <span class="ident">k2w_es3d</span></span>(<span>kxs, kzs, species, params, isMag=None, J=8, N=10, check_convergence=True, convergence_thresh=0.975, sort='real', dry_run=False)</span>
 </code></dt>
 <dd>
@@ -408,8 +409,8 @@ equivalent matrix.</p>
 <dd>A dictionary of relevant parameters. Here, the used
 ones are <code>epsilon0</code> and <code>Bz</code>.</dd>
 <dt><strong><code>isMag</code></strong> :&ensp;<code>list</code> or <code>None</code></dt>
-<dd>A list of booleans to indicate wether each species is
-magnetized. If not set, all species are assumed to be magnetized.</dd>
+<dd>A list of booleans to indicate wether each species
+is magnetized. If not set, all species are assumed to be magnetized.</dd>
 <dt><strong><code>J</code></strong> :&ensp;<code>int</code></dt>
 <dd>Order of Pade approximation. One of (<code>8</code>, <code>12</code>).</dd>
 <dt><strong><code>N</code></strong> :&ensp;<code>int</code></dt>
@@ -472,8 +473,8 @@ solution for the <code>ik</code>th wavevector. The result is packed as a
           `q, m, n, v0x, v0z, p0x, p0z`.
         params (dict): A dictionary of relevant parameters. Here, the used
           ones are `epsilon0` and `Bz`.
-        isMag (list or None): A list of booleans to indicate wether each species is
-            magnetized. If not set, all species are assumed to be magnetized.
+        isMag (list or None): A list of booleans to indicate wether each species
+            is magnetized. If not set, all species are assumed to be magnetized.
         J (int): Order of Pade approximation. One of (`8`, `12`).
         N (int): Highest order of cylctron harmonic to include in the Bessel
           expansion of the bi-Maxwellian distribution. If `check_convergence`
@@ -533,6 +534,7 @@ solution for the <code>ik</code>th wavevector. The result is packed as a
                                     kp_rc2m, Nmax, bessSum))
                 Ns[ik] = Nmax
     logging.debug(&#34;Ns {}&#34;.format(Ns))
+    print(&#39;Ns&#39;, Ns)
     if dry_run:
         return
 
@@ -606,8 +608,8 @@ solution for the <code>ik</code>th wavevector. The result is packed as a
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="xenon.vlasov.vlasov_es.k2w_es1d" href="#xenon.vlasov.vlasov_es.k2w_es1d">k2w_es1d</a></code></li>
-<li><code><a title="xenon.vlasov.vlasov_es.k2w_es3d" href="#xenon.vlasov.vlasov_es.k2w_es3d">k2w_es3d</a></code></li>
+<li><code><a title="xenon.vlasov.vlasov_dr_es.k2w_es1d" href="#xenon.vlasov.vlasov_dr_es.k2w_es1d">k2w_es1d</a></code></li>
+<li><code><a title="xenon.vlasov.vlasov_dr_es.k2w_es3d" href="#xenon.vlasov.vlasov_dr_es.k2w_es3d">k2w_es3d</a></code></li>
 </ul>
 </li>
 </ul>
