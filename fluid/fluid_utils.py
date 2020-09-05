@@ -1,12 +1,12 @@
 __all__ = [
-    'fluid_params',
-    'draw_extra_fluid',
+    'extra_params',
+    'draw_extra_params',
 ]
 
 import numpy as np
 
 
-class fluid_params():
+class extra_params():
     """A class to compute useful variables from basic parameters for repeated
     usage."""
     def __init__(self, species, params, problem_type=None):
@@ -24,14 +24,15 @@ class fluid_params():
                     ])
             params (dict): A dictionary with keys `Bz`, `c`, `epsilon0`.
         """
-        if species.shape[1] == 10:  # em3d
+        if species.shape[1] == 10:  # fluid em3d
             q, m, n, vx, vy, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
                 species, axis=1)
             if problem_type is None:
                 problem_type = 'em3d'
             else:
                 assert problem_type == 'em3d'
-        elif species.shape[1] == 9:  # es3d
+
+        elif species.shape[1] == 9:  # fluid es3d
             q, m, n, vx, vz, p_perp, p_para, gamma_perp, gamma_para = np.rollaxis(
                 species, axis=1)
             vy = 0
@@ -39,7 +40,8 @@ class fluid_params():
                 problem_type = 'es3d'
             else:
                 assert problem_type == 'es3d'
-        elif species.shape[1] == 6:  # es1d
+
+        elif species.shape[1] == 6:  # fluid es1d
             q, m, n, vx, p, gamma = np.rollaxis(species, axis=1)
             vy = 0
             vz = 0
@@ -51,10 +53,36 @@ class fluid_params():
                 problem_type = 'es1d'
             else:
                 assert problem_type == 'es1d'
+
+        elif species.shape[1] == 7:  # vlasov es3d
+            q, m, n, vx, vz, p_perp, p_para = np.rollaxis(
+                    np.array(species), axis=1)
+            vy = 0
+            if problem_type is None:
+                problem_type = 'es3d'
+            else:
+                assert problem_type == 'es3d'
+
+        elif species.shape[1] == 5:  # vlasov es1d
+            q, m, n, vx, p = np.rollaxis(species, axis=1)
+            gamma = 1
+            vy = 0
+            vz = 0
+            p_perp = p
+            p_para = p
+            gamma_perp = gamma
+            gamma_para = gamma
+            if problem_type is None:
+                problem_type = 'es1d'
+            else:
+                assert problem_type == 'es1d'
+
         else:
             raise ValueError(
-                    '`species` must have 6 (es1d), 9 (es3d) or 10 '
-                    '(em3d) components.')
+                    '`species` must have 6 (fluid es1d), 9 (fluid es3d) 10 '
+                    '(fluid em3d) , 5 (vlasov es1d), or 7 (vlasov es3d) '
+                    'components.')
+
         nSpecies = len(q)
 
         B, c = 0, 1
@@ -155,11 +183,11 @@ class fluid_params():
             self.rhoi = self.n[1] * self.m[1]
 
 
-def draw_extra_fluid(params, ax, ks=None, what=[], cost=None):
+def draw_extra_params(params, ax, ks=None, what=[], cost=None):
     """
 
     Args:
-        params: A fluid_params instance.
+        params: A extra_params instance.
         what: A list of various curves to draw. Eligible elements are:
             vAlf, vMs, wp, wpe, wpi, wce, wci, wUH, wLH, wL, wR, wce, wci.
         cost: cos(theta) to be used with vAlf, vMs, wce, wci.
