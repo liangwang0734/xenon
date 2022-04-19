@@ -526,7 +526,7 @@ def k2w(kxs, kys, kzs, species, params, isMag=None,
         v = np.array((vx, vy, vz))
         p = np.array((pxx, pxy, pxz, pyy, pyz, pzz))
     elif moment == '5m':
-        nComps = 5
+        nComps = 4
         q, m, n, vx, vy, vz, p, gamma = \
                 np.rollaxis(species, axis=1)
         v = np.array((vx, vy, vz))
