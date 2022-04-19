@@ -17,7 +17,7 @@ def k2w_es1d(ks, species, params, J=8, sort='real'):
     generated that can be solved for complex frequencies as eigenvalues of the
     equivalent matrix.
 
-    [1]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
+    [1]: https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
   
     Args:
         ks (np.ndarray): An array of `k` values.
@@ -41,7 +41,7 @@ def k2w_es1d(ks, species, params, J=8, sort='real'):
         ws (np.ndarray): `ws[ik, :]` is the maginary frequency for the `ik`'th
             `kx` value.
     """
-    q, m, n, v, p = np.rollaxis(species, axis=1)
+    q, m, n, v, p = np.rollaxis(np.array(species), axis=1)
     eps0 = params['epsilon0']
     vt = np.sqrt(2. * p / n / m)
     lambdaD = np.sqrt(eps0 * p / (n * q)**2)
@@ -69,6 +69,7 @@ def k2w_es1d(ks, species, params, J=8, sort='real'):
         sort_idx = slice(None)
         if sort in ['imag']:
             sort_idx = np.argsort(w.imag + 1j * w.real)
+            sort_idx = sort_idx[::-1]
         elif sort in ['real']:
             sort_idx = np.argsort(w)
         elif sort != 'none':
@@ -105,7 +106,7 @@ def k2w_es3d(
     generated that can be solved for complex frequencies as eigenvalues of the
     equivalent matrix.
 
-    [1]:https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
+    [1]: https://iopscience.iop.org/article/10.1088/1009-0630/18/2/01/pdf
   
     Args:
         kxs (np.ndarray): Wavevector component values along `x`.
@@ -175,9 +176,8 @@ def k2w_es3d(
                                 "(kp*rc)^2 {}, N {}, bessSum {}".format(
                                     kp_rc2m, Nmax, bessSum))
                 Ns[ik] = Nmax
-    logging.debug("Ns {}".format(Ns))
-    print('Ns', Ns)
     if dry_run:
+        print("Ns {}".format(Ns))
         return
 
     for ik, k in enumerate(ks):
