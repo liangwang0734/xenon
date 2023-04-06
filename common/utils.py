@@ -1,5 +1,6 @@
 __all__ = [
     'plot_dr',
+    'BorderLine',
     'extra_params',
     'draw_extra_params',
 ]
@@ -59,65 +60,13 @@ def plot_dr(
                     k1, wi1 = 0, 0
                     return wi > (k-k0) * (wi1-wi0) / (k1-k0) + wi0
 
-            Another example is to keep modes within a region:
+            Another example that keeps points above a border line defined by
+            three points [0, -0.1], [0.8, -1], [1, -1.56] using the BorderLine
+            class of this package:
 
-                def wi_mask_func1(k, wi):
-                    k0, wi0 = 0, 0
-                    k1, wi1 = 5, -0.75
-                    k2, wi2 = 5, -4
-                    return (wi < (k-k0) * (wi1-wi0) / (k1-k0) + wi0) \  
-                         & (wi > (k-k0) * (wi2-wi0) / (k2-k0) + wi0)
-
-            A more complex example:
-
-                def above_border(k, wi, border_line):
-                    "Check if points are above or below a border_line
-                    Args:
-                    k: 1d array of k coordinates
-                    wi: 1d array of wi coordinates
-                    border_line: n*2 array, n is the # of points defining the
-                        line
-                    
-                    Returns:
-                    mask: 1d array
-                    "
-                    n_nodes = border_line.shape[0]
-
-                    # find the indices of the points with the smallest k
-                    # coordinate that is greater than each k coordinate in the
-                    # to check array
-                    j_values = np.searchsorted(border_line[:, 0], k)
-                    j_values[j_values >= n_nodes] = n_nodes - 1
-
-                    # get the two points on either side of each point in the k
-                    # array
-                    p1 = border_line[j_values - 1]
-                    p2 = border_line[j_values]
-
-                    # calculate the slope and y-intercept of the line connecting
-                    # the two points
-                    m_values = (p2[:, 1] - p1[:, 1]) / (p2[:, 0] - p1[:, 0])
-                    b_values = p1[:, 1] - m_values * p1[:, 0]
-
-                    # calculate the y-coordinate of the point on the line with
-                    # the same k
-                    # coordinate as each point in the k array
-                    y_line_values = m_values * k + b_values
-
-                    # create a mask array to store whether each point is above
-                    # or below the border line
-                    mask = wi >= y_line_values
-
-                    return mask
-
-                def wi_mask_func1(k, wi):
-                    border_line = np.array([
-                        [0, -0.1],
-                        [0.8, -1],
-                        [1, -1.56],
-                    ])
-                    mask = above_border(k, wi, border_line)
-                    return mask
+                xenon.common.BorderLine([
+                    [0, -0.1], [0.8, -1], [1, -1.56]
+                ]).mask_func_above_line
 
         wri_mask_funcs: A list of functions that return mask arrays using
             normalized wr and wi as input. For example, to remove heavily damped
@@ -193,6 +142,82 @@ def plot_dr(
         ax1.set_ylabel(r'$\gamma{}$'.format(wnorm_name))
         ax1.set_xlabel(r'$k{}$'.format(knorm_name))
         ax1.set_xlim(ks_.min(), ks_.max())
+
+
+class BorderLine(object):
+    """Mask function to check if points are above or below a border line.
+    """
+
+    def __init__(self, border_line):
+        """
+        Args:
+        border_line: list or M*2 array of coordinates of points defining the
+            border line.
+        """
+        self.border_line = border_line
+
+    def wi_border_line(self, k):
+        border_line = np.array(self.border_line)
+        n_nodes = border_line.shape[0]
+
+        # find the indices of the points with the smallest k coordinate that is
+        # greater than each k coordinate in the array
+        j_values = np.searchsorted(border_line[:, 0], k)
+        j_values[j_values >= n_nodes] = n_nodes - 1
+
+        # get the two points on either side of each point in the k array
+        p1 = border_line[j_values - 1]
+        p2 = border_line[j_values]
+
+        # calculate the slope and y-intercept of the line connecting the two
+        # points
+        m_values = (p2[:, 1] - p1[:, 1]) / (p2[:, 0] - p1[:, 0])
+        b_values = p1[:, 1] - m_values * p1[:, 0]
+
+        # calculate the y-coordinate of the point on the line with the same k
+        # coordinate as each point in the k array
+        y_line_values = m_values * k + b_values
+
+        # create a mask array to store whether each point is above or below the
+        # border line
+        return y_line_values
+
+    def mask_func_above_line(self, k, wi):
+        """Check if points are above or below the border line.
+
+        Args:
+        k: 1d array of k coordinates of points to check
+        wi: 1d array of wi coordinates of points to check
+
+        Returns:
+        mask: 1d boolean array
+        """
+        y_line_values = self.wi_border_line(k)
+
+        # create a mask array to store whether each point is above or below the
+        # border line
+        mask = wi >= y_line_values
+
+        return mask
+
+    def mask_func_below_line(self, k, wi):
+        """Check if points are above or below the border line.
+
+        Args:
+        k: 1d array of k coordinates of points to check
+        wi: 1d array of wi coordinates of points to check
+
+        Returns:
+        mask: 1d boolean array
+        """
+        y_line_values = self.wi_border_line(k)
+
+        # create a mask array to store whether each point is above or below the
+        # border line
+        mask = wi <= y_line_values
+
+        return mask
+
 
 
 class extra_params():
