@@ -67,6 +67,58 @@ def plot_dr(
                     k2, wi2 = 5, -4
                     return (wi < (k-k0) * (wi1-wi0) / (k1-k0) + wi0) \  
                          & (wi > (k-k0) * (wi2-wi0) / (k2-k0) + wi0)
+
+            A more complex example:
+
+                def above_border(k, wi, border_line):
+                    "Check if points are above or below a border_line
+                    Args:
+                    k: 1d array of k coordinates
+                    wi: 1d array of wi coordinates
+                    border_line: n*2 array, n is the # of points defining the
+                        line
+                    
+                    Returns:
+                    mask: 1d array
+                    "
+                    n_nodes = border_line.shape[0]
+
+                    # find the indices of the points with the smallest k
+                    # coordinate that is greater than each k coordinate in the
+                    # to check array
+                    j_values = np.searchsorted(border_line[:, 0], k)
+                    j_values[j_values >= n_nodes] = n_nodes - 1
+
+                    # get the two points on either side of each point in the k
+                    # array
+                    p1 = border_line[j_values - 1]
+                    p2 = border_line[j_values]
+
+                    # calculate the slope and y-intercept of the line connecting
+                    # the two points
+                    m_values = (p2[:, 1] - p1[:, 1]) / (p2[:, 0] - p1[:, 0])
+                    b_values = p1[:, 1] - m_values * p1[:, 0]
+
+                    # calculate the y-coordinate of the point on the line with
+                    # the same k
+                    # coordinate as each point in the k array
+                    y_line_values = m_values * k + b_values
+
+                    # create a mask array to store whether each point is above
+                    # or below the border line
+                    mask = wi >= y_line_values
+
+                    return mask
+
+                def wi_mask_func1(k, wi):
+                    border_line = np.array([
+                        [0, -0.1],
+                        [0.8, -1],
+                        [1, -1.56],
+                    ])
+                    mask = above_border(k, wi, border_line)
+                    return mask
+
         wri_mask_funcs: A list of functions that return mask arrays using
             normalized wr and wi as input. For example, to remove heavily damped
             modes, use
