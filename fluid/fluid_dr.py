@@ -158,6 +158,7 @@ def k2w_es3d(kxs, kzs, species, params, isMag=None, sort='real', eigenvector=Fal
         kx = kxs[ik]
         kz = kzs[ik]
         k2 = kx**2 + kz**2
+        k2 = max(k2, np.finfo(np.float32).eps)
         for j in range(nSpecies):
             idx = j * 4  # first index of fluid variables, i.e., number density
 
